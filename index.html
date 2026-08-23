@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CSE-221 | Semester Final</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 20% 10%, rgba(0, 255, 170, 0.07), transparent 30%),
+                radial-gradient(circle at 80% 90%, rgba(0, 140, 255, 0.06), transparent 30%),
+                #080b0f;
+            color: #e8edf2;
+            font-family: "Inter", sans-serif;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            text-align: center;
+            padding: 60px 20px 34px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 7px 14px;
+            border: 1px solid rgba(0, 255, 170, 0.25);
+            border-radius: 50px;
+            color: #00ffaa;
+            background: rgba(0, 255, 170, 0.05);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            font-size: clamp(30px, 5.5vw, 52px);
+            font-weight: 700;
+            letter-spacing: -2px;
+            color: #ffffff;
+        }
+
+        .subtitle {
+            margin-top: 12px;
+            color: #7f8b96;
+            font-size: 14px;
+        }
+
+        /* =========================
+           STICKY NAVIGATION
+        ========================= */
+
+        .nav-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 300;
+            width: 100%;
+            padding: 16px 0;
+            background: rgba(8, 11, 15, 0.7);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid transparent;
+            transition: padding 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        .nav-sticky.stuck {
+            padding: 8px 0;
+            border-bottom-color: #1a2229;
+            background: rgba(8, 11, 15, 0.92);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-wrapper {
+            width: min(1000px, 92%);
+            margin: auto;
+        }
+
+        nav {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            transition: gap 0.3s ease;
+        }
+
+        .nav-sticky.stuck nav {
+            gap: 8px;
+        }
+
+        .nav-card {
+            position: relative;
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+            min-height: 90px;
+            padding: 18px;
+
+            text-decoration: none;
+            color: #dce3e8;
+
+            background: rgba(15, 19, 24, 0.85);
+            border: 1px solid #1c252d;
+            border-radius: 14px;
+
+            transition:
+                transform 0.25s ease,
+                border-color 0.25s ease,
+                background 0.25s ease,
+                box-shadow 0.25s ease,
+                min-height 0.3s ease,
+                padding 0.3s ease,
+                border-radius 0.3s ease,
+                gap 0.3s ease;
+        }
+
+        .nav-sticky.stuck .nav-card {
+            min-height: 44px;
+            padding: 8px 12px;
+            gap: 10px;
+            border-radius: 10px;
+        }
+
+        .nav-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+
+            background: linear-gradient(120deg,
+                    transparent,
+                    rgba(0, 255, 170, 0.06),
+                    transparent);
+
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .nav-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .nav-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(0, 255, 170, 0.45);
+            background: rgba(17, 24, 29, 0.95);
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.35),
+                0 0 25px rgba(0, 255, 170, 0.06);
+        }
+
+        .nav-sticky.stuck .nav-card:hover {
+            transform: translateY(-1px);
+        }
+
+        /* ICON */
+
+        .icon {
+            flex-shrink: 0;
+
+            width: 46px;
+            height: 46px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 11px;
+
+            background: #111820;
+            border: 1px solid #25313a;
+
+            color: #00ffaa;
+            font-size: 18px;
+            font-weight: 700;
+
+            transition: width 0.3s ease, height 0.3s ease, font-size 0.3s ease, border-radius 0.3s ease;
+        }
+
+        .nav-sticky.stuck .icon {
+            width: 26px;
+            height: 26px;
+            font-size: 10.5px;
+            border-radius: 7px;
+        }
+
+        .nav-card:hover .icon {
+            border-color: rgba(0, 255, 170, 0.4);
+            background: rgba(0, 255, 170, 0.08);
+        }
+
+        .nav-info {
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+        }
+
+        .nav-title {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            color: #f2f5f7;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: font-size 0.3s ease;
+        }
+
+        .nav-sticky.stuck .nav-title {
+            font-size: 12px;
+        }
+
+        .nav-desc {
+            display: block;
+            margin-top: 5px;
+            color: #68747e;
+            font-size: 11px;
+            max-height: 20px;
+            overflow: hidden;
+            transition: max-height 0.25s ease, opacity 0.25s ease, margin 0.25s ease;
+        }
+
+        .nav-sticky.stuck .nav-desc {
+            max-height: 0;
+            opacity: 0;
+            margin: 0;
+        }
+
+        .arrow {
+            margin-left: auto;
+            color: #46515a;
+            font-size: 18px;
+            flex-shrink: 0;
+
+            transition:
+                transform 0.25s ease,
+                color 0.25s ease,
+                font-size 0.3s ease;
+        }
+
+        .nav-sticky.stuck .arrow {
+            font-size: 13px;
+        }
+
+        .nav-card:hover .arrow {
+            transform: translateX(4px);
+            color: #00ffaa;
+        }
+
+        /* =========================
+           CONTENT
+        ========================= */
+
+        main {
+            width: min(1000px, 92%);
+            margin: 45px auto 100px;
+        }
+
+        section {
+            scroll-margin-top: 90px;
+            margin-bottom: 70px;
+            padding: 30px;
+
+            background: rgba(12, 16, 21, 0.75);
+            border: 1px solid #1a2229;
+            border-radius: 16px;
+        }
+
+        .section-label {
+            color: #00ffaa;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        section h2 {
+            font-size: 26px;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        section > p.intro {
+            color: #93a0aa;
+            line-height: 1.8;
+            font-size: 14.5px;
+            margin-bottom: 10px;
+        }
+
+        /* =========================
+           SUB-CONTENT ELEMENTS
+        ========================= */
+
+        h3.sub-heading {
+            scroll-margin-top: 90px;
+            margin-top: 38px;
+            margin-bottom: 12px;
+            font-size: 18px;
+            color: #00ffaa;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        h3.sub-heading::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00ffaa;
+            flex-shrink: 0;
+        }
+
+        .tier {
+            display: inline-block;
+            font-size: 9.5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .tier-basic {
+            background: rgba(58, 160, 255, 0.12);
+            color: #3aa0ff;
+            border: 1px solid rgba(58, 160, 255, 0.3);
+        }
+
+        .tier-core {
+            background: rgba(0, 255, 170, 0.1);
+            color: #00ffaa;
+            border: 1px solid rgba(0, 255, 170, 0.3);
+        }
+
+        .tier-advanced {
+            background: rgba(255, 122, 182, 0.12);
+            color: #ff7ab6;
+            border: 1px solid rgba(255, 122, 182, 0.3);
+        }
+
+        h4.mini-heading {
+            margin-top: 22px;
+            margin-bottom: 10px;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #cfd8de;
+            letter-spacing: 0.3px;
+        }
+
+        section p {
+            color: #93a0aa;
+            line-height: 1.85;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        section ul, section ol {
+            color: #93a0aa;
+            line-height: 1.9;
+            font-size: 14px;
+            margin: 10px 0 16px 22px;
+        }
+
+        section li {
+            margin-bottom: 6px;
+        }
+
+        section li::marker {
+            color: #00ffaa;
+        }
+
+        strong, b {
+            color: #dfe6eb;
+            font-weight: 600;
+        }
+
+        code.inline {
+            background: rgba(0, 255, 170, 0.08);
+            color: #6bffce;
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 12.5px;
+            border: 1px solid rgba(0, 255, 170, 0.15);
+        }
+
+        /* CONCEPT / DEFINITION BOX */
+        .box {
+            background: rgba(0, 255, 170, 0.04);
+            border: 1px solid rgba(0, 255, 170, 0.18);
+            border-left: 3px solid #00ffaa;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin: 16px 0;
+        }
+
+        .box p {
+            color: #b7c2ca;
+            margin-bottom: 0;
+        }
+
+        .box p + p {
+            margin-top: 8px;
+        }
+
+        .box-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #00ffaa;
+            margin-bottom: 8px;
+        }
+
+        .box.warn {
+            border-color: rgba(255, 170, 0, 0.18);
+            border-left-color: #ffaa00;
+            background: rgba(255, 170, 0, 0.04);
+        }
+        .box.warn .box-title { color: #ffaa00; }
+
+        .box.exam {
+            border-color: rgba(0, 140, 255, 0.22);
+            border-left-color: #3aa0ff;
+            background: rgba(0, 140, 255, 0.04);
+        }
+        .box.exam .box-title { color: #3aa0ff; }
+
+        .box.proof {
+            border-color: rgba(255, 122, 182, 0.22);
+            border-left-color: #ff7ab6;
+            background: rgba(255, 122, 182, 0.04);
+        }
+        .box.proof .box-title { color: #ff7ab6; }
+
+        /* CODE / PSEUDOCODE BLOCKS */
+        pre {
+            background: #0a0d11;
+            border: 1px solid #1c252d;
+            border-radius: 10px;
+            padding: 18px;
+            overflow-x: auto;
+            margin: 14px 0 20px;
+            position: relative;
+        }
+
+        pre::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #46515a;
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+        }
+
+        pre code {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 12.5px;
+            line-height: 1.75;
+            color: #c9d1d9;
+            white-space: pre;
+        }
+
+        .kw { color: #ff7ab6; }
+        .tp { color: #6bd1ff; }
+        .fn { color: #b7f16b; }
+        .cm { color: #5c6773; font-style: italic; }
+        .st { color: #f2c94c; }
+        .nm { color: #ffb454; }
+
+        /* TABLES */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0 22px;
+            font-size: 13px;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        thead tr {
+            background: rgba(0, 255, 170, 0.07);
+        }
+
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            color: #00ffaa;
+            font-weight: 600;
+            font-size: 11.5px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(0, 255, 170, 0.2);
+        }
+
+        td {
+            padding: 9px 12px;
+            color: #a9b4bc;
+            border-bottom: 1px solid #161d24;
+        }
+
+        table.dp-grid th, table.dp-grid td {
+            text-align: center;
+            font-family: "JetBrains Mono", monospace;
+            padding: 8px;
+        }
+
+        table.dp-grid td.hl {
+            background: rgba(0, 255, 170, 0.1);
+            color: #6bffce;
+            font-weight: 700;
+        }
+
+        /* COMPLEXITY BADGES */
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 14px 0 20px;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            background: #10151b;
+            border: 1px solid #232d36;
+            font-size: 12px;
+            color: #93a0aa;
+        }
+
+        .badge-pill b {
+            color: #00ffaa;
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        /* STEP LIST */
+        ol.steps {
+            counter-reset: step;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        ol.steps li {
+            counter-increment: step;
+            position: relative;
+            padding-left: 34px;
+            margin-bottom: 12px;
+        }
+
+        ol.steps li::before {
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: -1px;
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: rgba(0, 255, 170, 0.1);
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            color: #00ffaa;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "JetBrains Mono", monospace;
+        }
+
+        hr.divider {
+            border: none;
+            border-top: 1px dashed #1c252d;
+            margin: 30px 0;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 800px) {
+            nav {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            header {
+                padding-top: 40px;
+            }
+
+            nav {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-card {
+                min-height: 70px;
+            }
+
+            .nav-sticky.stuck .nav-card {
+                min-height: 40px;
+            }
+
+            section {
+                padding: 20px 16px;
+            }
+
+            pre code {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+
+        <div class="badge">
+            CSE-221 • SEMESTER FINAL
+        </div>
+
+        <h1>Final Term Study Hub</h1>
+
+        <p class="subtitle">
+            Select a topic to access your study materials
+        </p>
+
+    </header>
+
+
+    <!-- STICKY NAVIGATION -->
+    <div class="nav-sticky" id="navSticky">
+        <div class="nav-wrapper">
+
+            <nav>
+
+                <a href="#mst" class="nav-card">
+
+                    <div class="icon">01</div>
+
+                    <div class="nav-info">
+                        <span class="nav-title">Minimum Spanning Tree</span>
+                        <span class="nav-desc">Prim's • Kruskal's</span>
+                    </div>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+                <a href="#huffman" class="nav-card">
+
+                    <div class="icon">02</div>
+
+                    <div class="nav-info">
+                        <span class="nav-title">Huffman Coding</span>
+                        <span class="nav-desc">Greedy Algorithm</span>
+                    </div>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+                <a href="#dp" class="nav-card">
+
+                    <div class="icon">03</div>
+
+                    <div class="nav-info">
+                        <span class="nav-title">Dynamic Programming</span>
+                        <span class="nav-desc">Optimization • Recurrence</span>
+                    </div>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+
+                <a href="#lcs" class="nav-card">
+
+                    <div class="icon">04</div>
+
+                    <div class="nav-info">
+                        <span class="nav-title">Longest Common Subsequence</span>
+                        <span class="nav-desc">LCS • Dynamic Programming</span>
+                    </div>
+
+                    <span class="arrow">→</span>
+
+                </a>
+
+            </nav>
+
+        </div>
+    </div>
+
+
+    <!-- CONTENT -->
+
+    <main>
+
+        <!-- =========================================================
+             TOPIC 01 — MINIMUM SPANNING TREE
+        ========================================================== -->
+        <section id="mst">
+
+            <div class="section-label">Topic 01</div>
+            <h2>Minimum Spanning Tree (MST)</h2>
+            <p class="intro">
+                A Minimum Spanning Tree connects all vertices of a weighted, undirected, connected graph
+                with the minimum possible total edge weight, using no cycles. Below the topic is built up
+                from raw graph definitions to full correctness proofs and algorithm variants.
+            </p>
+
+            <h3 class="sub-heading">Graph Fundamentals<span class="tier tier-basic">Basic</span></h3>
+            <p>Before MST makes sense, these terms must be second nature:</p>
+            <ul>
+                <li><b>Graph G = (V, E):</b> a set of vertices <code class="inline">V</code> and edges <code class="inline">E</code> connecting pairs of vertices.</li>
+                <li><b>Weighted graph:</b> every edge has a numeric cost/weight (distance, cost, time, etc.).</li>
+                <li><b>Undirected graph:</b> edge (u, v) is the same as (v, u) — no direction.</li>
+                <li><b>Connected graph:</b> there exists a path between every pair of vertices.</li>
+                <li><b>Path:</b> a sequence of edges connecting a sequence of distinct vertices.</li>
+                <li><b>Cycle:</b> a path that starts and ends at the same vertex with no repeated edges.</li>
+                <li><b>Tree:</b> a connected graph with <b>no cycles</b>. A tree on <code class="inline">n</code> vertices always has exactly <code class="inline">n − 1</code> edges.</li>
+                <li><b>Forest:</b> a disjoint union of trees (i.e., an acyclic graph that may be disconnected).</li>
+                <li><b>Cut:</b> a partition of <code class="inline">V</code> into two disjoint non-empty subsets <code class="inline">(S, V − S)</code>. An edge "crosses" the cut if it has one endpoint in each subset.</li>
+            </ul>
+
+            <h3 class="sub-heading">What Makes a Spanning Tree "Minimum"?<span class="tier tier-basic">Basic</span></h3>
+            <div class="box">
+                <div class="box-title">Definition</div>
+                <p>
+                    A <b>Spanning Tree</b> of a connected graph <code class="inline">G</code> is a subgraph
+                    that (a) includes every vertex of <code class="inline">G</code>, (b) is connected, and
+                    (c) is acyclic — hence it uses exactly <code class="inline">|V| − 1</code> edges.
+                </p>
+                <p>
+                    A <b>Minimum Spanning Tree (MST)</b> is a spanning tree whose sum of edge weights is
+                    the smallest possible among <b>all</b> spanning trees of <code class="inline">G</code>.
+                </p>
+            </div>
+            <ul>
+                <li>A connected graph can have <b>many</b> different spanning trees. (By Cayley's formula, a complete graph on n labeled vertices has exactly n<sup>n−2</sup> spanning trees.)</li>
+                <li>MST is defined only for <b>connected</b> graphs — a disconnected graph instead yields a <b>Minimum Spanning Forest</b> (one MST per connected component).</li>
+                <li><b>Uniqueness:</b> if all edge weights in the graph are distinct, the MST is guaranteed to be unique. If weights repeat, multiple different MSTs may exist — but they will all share the exact same total weight.</li>
+            </ul>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Greedy Strategy &amp; Core Properties<span class="tier tier-core">Core</span></h3>
+            <p>
+                Every MST algorithm is <b>greedy</b>: it repeatedly makes the cheapest safe choice
+                available, without ever reconsidering it. This greedy strategy is provably correct because
+                of two structural properties of MSTs:
+            </p>
+
+            <h4 class="mini-heading">1. Cut Property</h4>
+            <div class="box">
+                <p>
+                    For <b>any</b> cut <code class="inline">(S, V − S)</code> of the graph, if an edge
+                    <code class="inline">e</code> is the <b>unique minimum-weight edge</b> crossing that
+                    cut, then <code class="inline">e</code> belongs to <b>every</b> MST of the graph. (If
+                    there are ties for minimum, at least one of the tied edges belongs to some MST.)
+                </p>
+            </div>
+            <p><b>Why it matters:</b> both Prim's and Kruskal's are, at their core, repeated applications of the cut property — they always pick the cheapest edge crossing some meaningful cut.</p>
+
+            <h4 class="mini-heading">2. Cycle Property</h4>
+            <div class="box">
+                <p>
+                    For <b>any</b> cycle in the graph, if an edge <code class="inline">e</code> is the
+                    unique <b>maximum-weight</b> edge in that cycle, then <code class="inline">e</code>
+                    cannot belong to any MST — removing it and keeping the rest is always at least as good.
+                </p>
+            </div>
+            <p>This is the theoretical justification for why Kruskal's <i>skips</i> an edge that would close a cycle: that edge is never better than the alternative path already connecting its endpoints.</p>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Prim's Algorithm<span class="tier tier-core">Core</span></h3>
+            <p>
+                Prim's grows the MST one vertex at a time. Starting from an arbitrary source vertex, it
+                repeatedly adds the cheapest edge that connects a vertex already in the tree to a vertex
+                not yet in the tree — a <b>vertex-based</b> greedy approach that directly applies the cut
+                property, using the cut <code class="inline">(tree-so-far, remaining vertices)</code> at every step.
+            </p>
+
+            <h4 class="mini-heading">Idea / Steps</h4>
+            <ol class="steps">
+                <li>Pick any starting vertex and mark it as "in MST".</li>
+                <li>Maintain a <code class="inline">key[]</code> array — the minimum edge weight connecting each vertex to the growing tree (initialized to ∞, source = 0).</li>
+                <li>Repeatedly pick the vertex <b>not yet in MST</b> with the smallest <code class="inline">key</code> value.</li>
+                <li>Add it to the MST, and update the <code class="inline">key</code> values of its neighbours if a cheaper connecting edge is found.</li>
+                <li>Repeat until all <code class="inline">V</code> vertices are included.</li>
+            </ol>
+
+            <h4 class="mini-heading">Pseudocode — Array-Based (O(V²))</h4>
+            <pre data-lang="pseudocode"><code><span class="fn">PRIM</span>(Graph G, source s):
+    <span class="kw">for</span> each vertex v in G.V:
+        key[v] = INFINITY
+        parent[v] = NIL
+        inMST[v] = false
+    key[s] = 0
+
+    <span class="kw">for</span> i = 1 <span class="kw">to</span> |V|:
+        u = vertex <span class="kw">not</span> in MST <span class="kw">with</span> minimum key[u]   <span class="cm">// O(V) scan</span>
+        inMST[u] = true
+
+        <span class="kw">for</span> each neighbour v <span class="kw">of</span> u:
+            <span class="kw">if</span> inMST[v] == false <span class="kw">and</span> weight(u, v) &lt; key[v]:
+                key[v] = weight(u, v)
+                parent[v] = u
+
+    <span class="kw">return</span> parent[]   <span class="cm">// edges (parent[v], v) form the MST</span></code></pre>
+
+            <h4 class="mini-heading">Pseudocode — Min-Heap Based (O(E log V))</h4>
+            <pre data-lang="pseudocode"><code><span class="fn">PRIM-HEAP</span>(Graph G, source s):
+    <span class="kw">for</span> each vertex v in G.V:
+        key[v] = INFINITY
+        parent[v] = NIL
+    key[s] = 0
+    Q = min-priority-queue keyed <span class="kw">by</span> key[], containing all vertices
+
+    <span class="kw">while</span> Q <span class="kw">is not</span> empty:
+        u = EXTRACT-MIN(Q)             <span class="cm">// O(log V)</span>
+        <span class="kw">for</span> each neighbour v <span class="kw">of</span> u <span class="kw">still in</span> Q:
+            <span class="kw">if</span> weight(u, v) &lt; key[v]:
+                key[v] = weight(u, v)
+                parent[v] = u
+                DECREASE-KEY(Q, v, key[v])   <span class="cm">// O(log V)</span>
+
+    <span class="kw">return</span> parent[]</code></pre>
+
+            <div class="badges">
+                <span class="badge-pill">Adjacency Matrix: <b>O(V²)</b></span>
+                <span class="badge-pill">Binary Heap + Adj List: <b>O(E log V)</b></span>
+                <span class="badge-pill">Fibonacci Heap: <b>O(E + V log V)</b></span>
+                <span class="badge-pill">Space: <b>O(V + E)</b></span>
+            </div>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Kruskal's Algorithm<span class="tier tier-core">Core</span></h3>
+            <p>
+                Kruskal's grows the MST by considering edges in increasing order of weight, and greedily
+                adding an edge if it does not create a cycle — an <b>edge-based</b> greedy approach that
+                applies the cycle property directly. Cycle detection is efficiently handled using the
+                <b>Disjoint Set Union (Union-Find)</b> data structure.
+            </p>
+
+            <h4 class="mini-heading">Idea / Steps</h4>
+            <ol class="steps">
+                <li>Sort all edges in non-decreasing order of weight.</li>
+                <li>Initialize a disjoint-set (each vertex is its own parent/set).</li>
+                <li>For each edge <code class="inline">(u, v)</code> in sorted order: if <code class="inline">u</code> and <code class="inline">v</code> belong to different sets, include the edge in MST and <b>union</b> the two sets.</li>
+                <li>If they belong to the same set, including the edge would form a cycle — skip it.</li>
+                <li>Stop once <code class="inline">V − 1</code> edges are added.</li>
+            </ol>
+
+            <h4 class="mini-heading">Pseudocode</h4>
+            <pre data-lang="pseudocode"><code><span class="fn">KRUSKAL</span>(Graph G):
+    A = ∅                          <span class="cm">// set to hold MST edges</span>
+    <span class="kw">for</span> each vertex v in G.V:
+        MAKE-SET(v)
+
+    sort G.E <span class="kw">by</span> non-decreasing weight
+
+    <span class="kw">for</span> each edge (u, v) in sorted G.E:
+        <span class="kw">if</span> FIND-SET(u) ≠ FIND-SET(v):
+            A = A ∪ {(u, v)}
+            UNION(u, v)
+
+    <span class="kw">return</span> A</code></pre>
+
+            <h4 class="mini-heading">Disjoint Set Union — Path Compression + Union by Rank</h4>
+            <p>
+                A naive Union-Find can degrade to O(n) per operation. Two optimizations bring it down to
+                nearly O(1) amortized:
+            </p>
+            <ul>
+                <li><b>Union by Rank/Size:</b> always attach the smaller/shallower tree under the root of the larger/deeper one, keeping trees flat.</li>
+                <li><b>Path Compression:</b> during <code class="inline">FIND</code>, make every visited node point directly to the root, flattening the structure for future queries.</li>
+            </ul>
+            <pre data-lang="pseudocode"><code><span class="fn">MAKE-SET</span>(x):
+    parent[x] = x
+    rank[x] = 0
+
+<span class="fn">FIND-SET</span>(x):
+    <span class="kw">if</span> parent[x] ≠ x:
+        parent[x] = <span class="fn">FIND-SET</span>(parent[x])   <span class="cm">// path compression</span>
+    <span class="kw">return</span> parent[x]
+
+<span class="fn">UNION</span>(x, y):
+    rx = <span class="fn">FIND-SET</span>(x)
+    ry = <span class="fn">FIND-SET</span>(y)
+    <span class="kw">if</span> rx == ry: <span class="kw">return</span>          <span class="cm">// already connected -> would form a cycle</span>
+    <span class="kw">if</span> rank[rx] &lt; rank[ry]:
+        swap(rx, ry)
+    parent[ry] = rx
+    <span class="kw">if</span> rank[rx] == rank[ry]:
+        rank[rx] = rank[rx] + 1</code></pre>
+
+            <p>
+                With both optimizations, a sequence of <code class="inline">m</code> operations on
+                <code class="inline">n</code> elements runs in <code class="inline">O(m · α(n))</code>
+                time, where <code class="inline">α</code> is the <b>inverse Ackermann function</b> — grows
+                so slowly it is effectively a constant (≤ 4) for any input size in the real world.
+            </p>
+
+            <div class="badges">
+                <span class="badge-pill">Sorting edges: <b>O(E log E)</b></span>
+                <span class="badge-pill">Union-Find ops: <b>O(E · α(V))</b> ≈ O(E)</span>
+                <span class="badge-pill">Total: <b>O(E log E) = O(E log V)</b></span>
+                <span class="badge-pill">Space: <b>O(V + E)</b></span>
+            </div>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Worked Example<span class="tier tier-core">Core</span></h3>
+            <p>Graph with 5 vertices (0–4) and edges: (0,1,2) (0,3,6) (1,2,3) (1,3,8) (1,4,5) (2,4,7) (3,4,9)</p>
+            <table>
+                <thead><tr><th>Step</th><th>Edge Considered</th><th>Kruskal's Action</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>0–1 (w=2)</td><td>Add (no cycle)</td></tr>
+                    <tr><td>2</td><td>1–2 (w=3)</td><td>Add (no cycle)</td></tr>
+                    <tr><td>3</td><td>1–4 (w=5)</td><td>Add (no cycle)</td></tr>
+                    <tr><td>4</td><td>0–3 (w=6)</td><td>Add (no cycle)</td></tr>
+                    <tr><td>5</td><td>2–4 (w=7)</td><td>Skip — creates cycle</td></tr>
+                    <tr><td>6</td><td>1–3 (w=8)</td><td>Skip — creates cycle</td></tr>
+                </tbody>
+            </table>
+            <p><b>Total MST weight = 2 + 3 + 5 + 6 = 16</b>. Running Prim's from vertex 0 on the same graph yields the identical set of edges (MST is unique here since all weights are distinct).</p>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Correctness Proof (Sketch)<span class="tier tier-advanced">Advanced</span></h3>
+            <div class="box proof">
+                <div class="box-title">Proof by Induction (applies to both Prim's and Kruskal's)</div>
+                <p>
+                    <b>Claim:</b> at every step, the set of edges chosen so far is a subset of <i>some</i> MST.
+                </p>
+                <p>
+                    <b>Base case:</b> with 0 edges chosen, the empty set is trivially a subset of any MST.
+                </p>
+                <p>
+                    <b>Inductive step:</b> assume the edges chosen so far, <code class="inline">A</code>,
+                    are a subset of some MST <code class="inline">T</code>. The algorithm now adds an edge
+                    <code class="inline">e</code> that is the minimum-weight edge crossing some cut
+                    respecting <code class="inline">A</code> (Prim's: tree vs. rest; Kruskal's: the two
+                    components <code class="inline">e</code> would merge). By the <b>cut property</b>,
+                    <code class="inline">e</code> belongs to some MST. If <code class="inline">e ∈ T</code>
+                    already, <code class="inline">A ∪ {e}</code> stays a subset of <code class="inline">T</code>.
+                    If not, adding <code class="inline">e</code> to <code class="inline">T</code> creates a
+                    cycle; removing the (necessarily heavier, by minimality of <code class="inline">e</code>)
+                    other cut-crossing edge in that cycle produces a new MST <code class="inline">T′</code>
+                    that contains <code class="inline">A ∪ {e}</code>. Either way, the invariant holds.
+                </p>
+                <p>
+                    <b>Conclusion:</b> when the algorithm terminates with <code class="inline">V − 1</code>
+                    edges, that edge set is itself a spanning tree contained in some MST — hence it
+                    <i>is</i> an MST.
+                </p>
+            </div>
+
+            <h3 class="sub-heading">Variants &amp; Extensions<span class="tier tier-advanced">Advanced</span></h3>
+            <h4 class="mini-heading">Borůvka's Algorithm</h4>
+            <p>
+                The oldest MST algorithm (1926). It repeatedly, for <b>every component</b>, finds the
+                cheapest edge leaving that component and adds all such edges simultaneously (merging
+                components), then repeats. Since each round at least halves the number of components, it
+                terminates in <code class="inline">O(log V)</code> rounds.
+            </p>
+            <pre data-lang="pseudocode"><code><span class="fn">BORUVKA</span>(Graph G):
+    A = ∅
+    <span class="kw">for</span> each vertex v: MAKE-SET(v)
+    numComponents = |V|
+
+    <span class="kw">while</span> numComponents &gt; 1:
+        cheapest[] = NIL <span class="kw">for</span> every component
+        <span class="kw">for</span> each edge (u, v, w) in G.E:
+            cu = FIND-SET(u); cv = FIND-SET(v)
+            <span class="kw">if</span> cu ≠ cv:
+                <span class="kw">if</span> cheapest[cu] is NIL <span class="kw">or</span> w &lt; cheapest[cu].w:
+                    cheapest[cu] = (u, v, w)
+                <span class="kw">if</span> cheapest[cv] is NIL <span class="kw">or</span> w &lt; cheapest[cv].w:
+                    cheapest[cv] = (u, v, w)
+
+        <span class="kw">for</span> each component c <span class="kw">with</span> cheapest[c] ≠ NIL:
+            (u, v, w) = cheapest[c]
+            <span class="kw">if</span> FIND-SET(u) ≠ FIND-SET(v):
+                UNION(u, v); A = A ∪ {(u, v)}
+                numComponents = numComponents − 1
+
+    <span class="kw">return</span> A</code></pre>
+            <div class="badges">
+                <span class="badge-pill">Time: <b>O(E log V)</b></span>
+                <span class="badge-pill">Naturally parallelizable</span>
+            </div>
+
+            <h4 class="mini-heading">Other Advanced Notes</h4>
+            <ul>
+                <li><b>Second-Best MST:</b> for each non-tree edge, find the max edge on the tree path it would create a cycle with; the second-best MST swaps in the smallest such replacement (uses techniques like binary lifting for max-edge-on-path queries).</li>
+                <li><b>Minimum Spanning Forest:</b> for a disconnected graph, both Prim's (run once per component) and Kruskal's (naturally, since it processes global edges) produce a forest of per-component MSTs.</li>
+                <li><b>Applications:</b> network design (minimum cost cabling/piping), approximate algorithms for the Traveling Salesman Problem (2-approximation via MST), clustering (removing the k−1 most expensive MST edges gives k clusters), circuit design.</li>
+            </ul>
+
+            <h3 class="sub-heading">Algorithm Comparison<span class="tier tier-advanced">Advanced</span></h3>
+            <table>
+                <thead><tr><th>Aspect</th><th>Prim's</th><th>Kruskal's</th><th>Borůvka's</th></tr></thead>
+                <tbody>
+                    <tr><td>Approach</td><td>Vertex-based, grows one tree</td><td>Edge-based, grows a forest</td><td>Component-based, parallel merges</td></tr>
+                    <tr><td>Data Structure</td><td>Min-Heap / Priority Queue</td><td>Disjoint Set Union</td><td>Disjoint Set Union</td></tr>
+                    <tr><td>Best for</td><td>Dense graphs</td><td>Sparse graphs</td><td>Parallel / distributed settings</td></tr>
+                    <tr><td>Complexity</td><td>O(V²) or O(E log V)</td><td>O(E log E)</td><td>O(E log V)</td></tr>
+                </tbody>
+            </table>
+
+            <div class="box exam">
+                <div class="box-title">Likely Exam Questions</div>
+                <ul>
+                    <li>State and prove the cut property / cycle property of MST.</li>
+                    <li>Trace Prim's and Kruskal's step-by-step on a given weighted graph.</li>
+                    <li>Derive and compare time complexity of Prim's (matrix vs heap) and Kruskal's.</li>
+                    <li>Explain how path compression + union by rank achieve near-O(1) amortized Union-Find time.</li>
+                    <li>Prove that MST weight is unique even when the MST itself is not (equal-weight edges).</li>
+                    <li>Trace Borůvka's algorithm through its rounds on a small graph.</li>
+                    <li>Apply MST to a network/cabling cost-minimization word problem.</li>
+                </ul>
+            </div>
+
+        </section>
+
+
+        <!-- =========================================================
+             TOPIC 02 — HUFFMAN CODING
+        ========================================================== -->
+        <section id="huffman">
+
+            <div class="section-label">Topic 02</div>
+            <h2>Huffman Coding</h2>
+            <p class="intro">
+                A greedy algorithm for lossless data compression that assigns variable-length binary codes
+                to characters based on their frequency — shorter codes for frequent characters, longer
+                codes for rare ones.
+            </p>
+
+            <h3 class="sub-heading">Data Compression Fundamentals<span class="tier tier-basic">Basic</span></h3>
+            <ul>
+                <li><b>Lossless compression:</b> the original data can be perfectly reconstructed from the compressed form (Huffman coding is lossless). Contrast with <b>lossy</b> compression (e.g. JPEG), where some information is discarded permanently.</li>
+                <li><b>Fixed-length codes:</b> every symbol uses the same number of bits (e.g. ASCII uses 8 bits/character regardless of frequency).</li>
+                <li><b>Variable-length codes:</b> different symbols may use a different number of bits — this is where Huffman coding's savings come from.</li>
+                <li><b>Prefix code (a.k.a. prefix-free code):</b> no codeword is a prefix of any other codeword. This property guarantees a bitstream can be decoded <b>unambiguously</b>, left to right, with no delimiters needed.</li>
+            </ul>
+
+            <div class="box">
+                <div class="box-title">Why Not Just Use Fixed-Length Codes?</div>
+                <p>
+                    Fixed-length encoding wastes space when character frequencies are skewed. If
+                    <code class="inline">'e'</code> appears far more often than <code class="inline">'z'</code>,
+                    giving <code class="inline">'e'</code> a short (e.g. 2-bit) code and
+                    <code class="inline">'z'</code> a longer (e.g. 7-bit) code reduces the average bits
+                    per character, and hence total file size — provided the codes remain prefix-free.
+                </p>
+            </div>
+
+            <h4 class="mini-heading">Theoretical Lower Bound — Entropy</h4>
+            <p>
+                Shannon's source coding theorem states that the theoretical minimum average number of bits
+                per symbol is the <b>entropy</b>:
+            </p>
+            <div class="box">
+                <p><code class="inline">H(X) = − Σ p(x) · log₂ p(x)</code>, summed over all symbols x with probability p(x).</p>
+            </div>
+            <p>Huffman coding gets very close to this bound (within 1 bit per symbol in the worst case), and achieves it exactly when all probabilities are exact powers of ½.</p>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Huffman's Greedy Algorithm<span class="tier tier-core">Core</span></h3>
+            <p>
+                Huffman coding builds a binary tree — the <b>Huffman Tree</b> — bottom-up, where more
+                frequent characters end up closer to the root (shorter codes) and rarer characters end up
+                deeper (longer codes). It minimizes the total encoded length
+                <code class="inline">Σ freq(c) × depth(c)</code>.
+            </p>
+
+            <h4 class="mini-heading">Algorithm / Steps (using a Min-Heap)</h4>
+            <ol class="steps">
+                <li>Compute the frequency of every character in the input.</li>
+                <li>Create a leaf node for each character and insert all into a <b>min-priority-queue</b> keyed by frequency.</li>
+                <li>While more than one node remains in the queue: extract the <b>two nodes of smallest frequency</b>.</li>
+                <li>Create a new internal node with these two as children, with frequency = sum of the two.</li>
+                <li>Insert the new node back into the priority queue.</li>
+                <li>Repeat until only one node remains — this is the <b>root</b> of the Huffman Tree.</li>
+                <li>Assign <code class="inline">0</code> to every left edge and <code class="inline">1</code> to every right edge; the code for a character is the path from root to its leaf.</li>
+            </ol>
+
+            <h4 class="mini-heading">Pseudocode — Building the Tree</h4>
+            <pre data-lang="pseudocode"><code><span class="fn">HUFFMAN</span>(C):                          <span class="cm">// C = set of characters with frequencies</span>
+    n = |C|
+    Q = min-priority-queue initialized <span class="kw">with</span> C   <span class="cm">// keyed by freq</span>
+
+    <span class="kw">for</span> i = 1 <span class="kw">to</span> n − 1:
+        z = <span class="kw">new</span> Node()
+        z.left  = x = EXTRACT-MIN(Q)
+        z.right = y = EXTRACT-MIN(Q)
+        z.freq  = x.freq + y.freq
+        INSERT(Q, z)
+
+    <span class="kw">return</span> EXTRACT-MIN(Q)          <span class="cm">// root of the Huffman tree</span></code></pre>
+
+            <h4 class="mini-heading">Pseudocode — Generating Codes</h4>
+            <pre data-lang="pseudocode"><code><span class="fn">GENERATE-CODES</span>(node, prefix, codeTable):
+    <span class="kw">if</span> node is a leaf:
+        codeTable[node.char] = prefix   <span class="cm">// (use "0" if the whole alphabet is one symbol)</span>
+        <span class="kw">return</span>
+    <span class="fn">GENERATE-CODES</span>(node.left,  prefix + "0", codeTable)
+    <span class="fn">GENERATE-CODES</span>(node.right, prefix + "1", codeTable)</code></pre>
+
+            <h4 class="mini-heading">Pseudocode — Decoding a Bitstream</h4>
+            <pre data-lang="pseudocode"><code><span class="fn">DECODE</span>(root, bitstream):
+    output = ""
+    node = root
+    <span class="kw">for</span> each bit in bitstream:
+        node = (bit == 0) ? node.left : node.right
+        <span class="kw">if</span> node is a leaf:
+            output = output + node.char
+            node = root       <span class="cm">// restart at root for next character</span>
+    <span class="kw">return</span> output</code></pre>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Worked Example<span class="tier tier-core">Core</span></h3>
+            <p>Characters with frequencies: a:5, b:9, c:12, d:13, e:16, f:45 (total = 100)</p>
+            <table>
+                <thead><tr><th>Merge Step</th><th>Nodes Combined</th><th>New Node Freq</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>a(5) + b(9)</td><td>14</td></tr>
+                    <tr><td>2</td><td>c(12) + d(13)</td><td>25</td></tr>
+                    <tr><td>3</td><td>(ab)14 + e(16)</td><td>30</td></tr>
+                    <tr><td>4</td><td>(cd)25 + (abe)30</td><td>55</td></tr>
+                    <tr><td>5</td><td>f(45) + (cdabe)55</td><td>100 (root)</td></tr>
+                </tbody>
+            </table>
+            <table>
+                <thead><tr><th>Char</th><th>Freq</th><th>Code</th><th>Bits Used</th></tr></thead>
+                <tbody>
+                    <tr><td>f</td><td>45</td><td>0</td><td>45</td></tr>
+                    <tr><td>c</td><td>12</td><td>100</td><td>36</td></tr>
+                    <tr><td>d</td><td>13</td><td>101</td><td>39</td></tr>
+                    <tr><td>a</td><td>5</td><td>1100</td><td>20</td></tr>
+                    <tr><td>b</td><td>9</td><td>1101</td><td>36</td></tr>
+                    <tr><td>e</td><td>16</td><td>111</td><td>48</td></tr>
+                </tbody>
+            </table>
+            <p><b>Total Huffman bits = 224</b> vs. <b>fixed 8-bit encoding = 800 bits</b> — a 72% reduction. (Exact code strings can vary slightly by tie-breaking rule, but total bit count remains optimal.)</p>
+
+            <div class="badges">
+                <span class="badge-pill">Build Frequency Table: <b>O(n)</b></span>
+                <span class="badge-pill">Build Huffman Tree: <b>O(k log k)</b></span>
+                <span class="badge-pill">Encode Text: <b>O(n)</b></span>
+                <span class="badge-pill">Overall: <b>O(n + k log k)</b>, k = distinct chars</span>
+            </div>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Proof of Optimality<span class="tier tier-advanced">Advanced</span></h3>
+            <div class="box proof">
+                <div class="box-title">Greedy-Choice Property</div>
+                <p>
+                    <b>Claim:</b> in an optimal prefix code, the two least-frequent characters have
+                    codewords of the same (maximum) length and differ only in the last bit — i.e. they are
+                    sibling leaves at the deepest level of some optimal tree.
+                </p>
+                <p>
+                    <b>Proof sketch (exchange argument):</b> suppose an optimal tree <code class="inline">T</code>
+                    does not have the two least-frequent symbols <code class="inline">x, y</code> as
+                    deepest siblings. Take any two siblings <code class="inline">a, b</code> at the
+                    maximum depth of <code class="inline">T</code> (such siblings must exist since every
+                    internal node in an optimal tree has two children). Since <code class="inline">x, y</code>
+                    are the least frequent, <code class="inline">freq(x) ≤ freq(a)</code> and
+                    <code class="inline">freq(y) ≤ freq(b)</code>. Swapping <code class="inline">x ↔ a</code>
+                    and <code class="inline">y ↔ b</code> cannot increase the total cost
+                    <code class="inline">Σ freq(c)·depth(c)</code> (moving a lighter symbol to a deeper
+                    position and a heavier one to a shallower position only helps or ties). Hence an
+                    optimal tree exists with <code class="inline">x, y</code> as deepest siblings.
+                </p>
+                <p>
+                    <b>Optimal substructure:</b> once <code class="inline">x</code> and
+                    <code class="inline">y</code> are merged into a single node <code class="inline">z</code>
+                    with frequency <code class="inline">freq(x) + freq(y)</code>, an optimal tree for the
+                    reduced alphabet (replacing x, y with z) combined with expanding z back into x, y gives
+                    an optimal tree for the original alphabet. This justifies the recursive greedy merging.
+                </p>
+            </div>
+
+            <h3 class="sub-heading">Variants &amp; Practical Extensions<span class="tier tier-advanced">Advanced</span></h3>
+            <ul>
+                <li><b>Canonical Huffman Codes:</b> re-assigns codewords using only the code <b>lengths</b> from the tree, in a standardized way — the tree itself doesn't need to be transmitted with the compressed data, only the lengths (used in DEFLATE/ZIP, JPEG).</li>
+                <li><b>Adaptive (Dynamic) Huffman Coding:</b> builds/updates the tree on the fly as symbols are read, so it works in a single pass without needing frequencies upfront (e.g. the FGK and Vitter algorithms).</li>
+                <li><b>n-ary Huffman Coding:</b> generalizes to an n-ary tree (n-way merges instead of 2-way) for alphabets larger than binary output.</li>
+                <li><b>Limitation vs. Arithmetic/Range Coding:</b> Huffman coding must assign a whole number of bits per symbol, so it can lose efficiency when the ideal code length (from entropy) isn't an integer. Arithmetic coding can achieve closer-to-entropy compression by encoding entire messages as a single fractional number.</li>
+            </ul>
+
+            <div class="box warn">
+                <div class="box-title">Common Pitfalls</div>
+                <ul>
+                    <li>Forgetting the edge case of a single distinct character (its code must still be non-empty, e.g. "0", even though prefix logic alone wouldn't require it).</li>
+                    <li>Ties in frequency: any consistent tie-breaking rule still gives an optimal tree (same total bits), though the exact codewords may differ from another valid solution.</li>
+                    <li>Huffman coding is optimal only among <b>prefix codes</b> — for non-prefix or block codes different bounds may apply.</li>
+                </ul>
+            </div>
+
+            <div class="box exam">
+                <div class="box-title">Likely Exam Questions</div>
+                <ul>
+                    <li>Construct the full Huffman tree for a given character-frequency table and derive each code.</li>
+                    <li>Compute total encoded bits vs fixed-length encoding and calculate space saved (%).</li>
+                    <li>Prove why Huffman coding produces a prefix code and why that guarantees unambiguous decoding.</li>
+                    <li>Prove Huffman's greedy-choice property using the exchange argument.</li>
+                    <li>Decode a given bitstream using a provided Huffman tree.</li>
+                    <li>Compute the Shannon entropy of a distribution and compare it to the Huffman-achieved average code length.</li>
+                </ul>
+            </div>
+
+        </section>
+
+
+        <!-- =========================================================
+             TOPIC 03 — DYNAMIC PROGRAMMING
+        ========================================================== -->
+        <section id="dp">
+
+            <div class="section-label">Topic 03</div>
+            <h2>Dynamic Programming (DP)</h2>
+            <p class="intro">
+                A method for solving complex problems by breaking them into overlapping subproblems,
+                solving each subproblem once, and storing (caching) results to avoid redundant work.
+            </p>
+
+            <h3 class="sub-heading">From Recursion to DP<span class="tier tier-basic">Basic</span></h3>
+            <p>
+                A naive recursive solution to Fibonacci repeats work: <code class="inline">fib(5)</code>
+                calls <code class="inline">fib(4)</code> and <code class="inline">fib(3)</code>, but
+                <code class="inline">fib(4)</code> itself calls <code class="inline">fib(3)</code> again —
+                the same subproblem is solved from scratch multiple times, and the recursion tree grows
+                exponentially:
+            </p>
+            <pre data-lang="pseudocode"><code>                    fib(5)
+                 /            \
+            fib(4)             fib(3)
+           /      \            /     \
+        fib(3)   fib(2)     fib(2)   fib(1)
+        /   \     /   \      /   \
+    fib(2) fib(1) ...  ...  ...  ...
+    <span class="cm">// fib(3), fib(2) etc. are recomputed many times over</span></code></pre>
+            <p>DP's core idea: <b>compute each distinct subproblem only once, and reuse the stored answer</b> — turning exponential time into polynomial time.</p>
+
+            <h3 class="sub-heading">Optimal Substructure &amp; Overlapping Subproblems<span class="tier tier-basic">Basic</span></h3>
+            <div class="box">
+                <div class="box-title">The Two Requirements for DP</div>
+                <p>
+                    <b>Optimal Substructure:</b> an optimal solution to the problem can be constructed
+                    from optimal solutions to its subproblems. (E.g., the shortest path from A to C
+                    through B is the shortest A→B path plus the shortest B→C path.)
+                </p>
+                <p>
+                    <b>Overlapping Subproblems:</b> a recursive solution revisits the same subproblems
+                    repeatedly, rather than each subproblem appearing only once (which is more typical of
+                    Divide &amp; Conquer, e.g. Merge Sort's subarrays never overlap).
+                </p>
+            </div>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Two DP Approaches<span class="tier tier-core">Core</span></h3>
+            <table>
+                <thead><tr><th>Approach</th><th>Direction</th><th>Mechanism</th><th>Trade-offs</th></tr></thead>
+                <tbody>
+                    <tr><td><b>Memoization</b> (Top-Down)</td><td>Recursive, starts from the big problem</td><td>Recursion + cache (array/map) to store computed results</td><td>Easy to derive directly from the recurrence; some overhead from the recursion call stack</td></tr>
+                    <tr><td><b>Tabulation</b> (Bottom-Up)</td><td>Iterative, starts from base cases</td><td>Fill a table iteratively in dependency order</td><td>Usually faster in practice, no recursion overhead, and allows further space optimization</td></tr>
+                </tbody>
+            </table>
+
+            <h4 class="mini-heading">General Design Steps</h4>
+            <ol class="steps">
+                <li>Define the subproblem clearly — what does <code class="inline">dp[i]</code> or <code class="inline">dp[i][j]</code> represent?</li>
+                <li>Write the recurrence relation connecting a state to smaller/previous states.</li>
+                <li>Identify the base case(s).</li>
+                <li>Decide computation order — top-down with memo, or bottom-up table fill.</li>
+                <li>Optimize space, if possible — keep only the last row/column if the recurrence only needs the immediately preceding state.</li>
+            </ol>
+
+            <h4 class="mini-heading">Fibonacci — Both Approaches</h4>
+            <pre data-lang="pseudocode"><code><span class="cm">// Top-Down (Memoization)</span>
+memo[] = {-1, -1, ..., -1}
+<span class="fn">FIB</span>(n):
+    <span class="kw">if</span> n ≤ 1: <span class="kw">return</span> n
+    <span class="kw">if</span> memo[n] ≠ -1: <span class="kw">return</span> memo[n]
+    memo[n] = <span class="fn">FIB</span>(n-1) + <span class="fn">FIB</span>(n-2)
+    <span class="kw">return</span> memo[n]
+
+<span class="cm">// Bottom-Up (Tabulation), O(1) space</span>
+<span class="fn">FIB-TAB</span>(n):
+    <span class="kw">if</span> n ≤ 1: <span class="kw">return</span> n
+    prev2 = 0; prev1 = 1
+    <span class="kw">for</span> i = 2 <span class="kw">to</span> n:
+        cur = prev1 + prev2
+        prev2 = prev1; prev1 = cur
+    <span class="kw">return</span> prev1</code></pre>
+            <div class="badges">
+                <span class="badge-pill">Naive recursion: <b>O(2ⁿ)</b></span>
+                <span class="badge-pill">DP: <b>O(n)</b> time</span>
+                <span class="badge-pill">Tabulation, space-optimized: <b>O(1)</b></span>
+            </div>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">0/1 Knapsack<span class="tier tier-core">Core</span></h3>
+            <p>
+                Given <code class="inline">n</code> items each with weight <code class="inline">wt[i]</code>
+                and value <code class="inline">val[i]</code>, and a knapsack of capacity
+                <code class="inline">W</code>, maximize total value without exceeding capacity. Each item
+                is taken <b>whole or not at all</b> — unlike the Fractional Knapsack (a greedy problem),
+                items here cannot be split.
+            </p>
+
+            <h4 class="mini-heading">Recurrence Relation</h4>
+            <div class="box">
+                <p>Let <code class="inline">dp[i][w]</code> = max value achievable using the first <code class="inline">i</code> items with capacity <code class="inline">w</code>.</p>
+                <p>
+                    <code class="inline">dp[i][w] = dp[i-1][w]</code> &nbsp;if <code class="inline">wt[i] &gt; w</code> (item i doesn't fit)<br>
+                    <code class="inline">dp[i][w] = max( dp[i-1][w], dp[i-1][w-wt[i]] + val[i] )</code> &nbsp;otherwise (skip item i, or take it)
+                </p>
+                <p><b>Base case:</b> <code class="inline">dp[0][w] = 0</code> for all w (no items chosen → 0 value).</p>
+            </div>
+
+            <h4 class="mini-heading">Pseudocode — 2D Table</h4>
+            <pre data-lang="pseudocode"><code><span class="fn">KNAPSACK</span>(wt[1..n], val[1..n], W):
+    <span class="kw">for</span> w = 0 <span class="kw">to</span> W: dp[0][w] = 0
+
+    <span class="kw">for</span> i = 1 <span class="kw">to</span> n:
+        <span class="kw">for</span> w = 0 <span class="kw">to</span> W:
+            <span class="kw">if</span> wt[i] &gt; w:
+                dp[i][w] = dp[i-1][w]
+            <span class="kw">else</span>:
+                dp[i][w] = max(dp[i-1][w], dp[i-1][w-wt[i]] + val[i])
+
+    <span class="kw">return</span> dp[n][W]</code></pre>
+
+            <h4 class="mini-heading">Pseudocode — Space-Optimized 1D</h4>
+            <p>Since row <code class="inline">i</code> only depends on row <code class="inline">i-1</code>, a single array suffices — <b>as long as the inner loop runs in reverse</b>, so each cell is updated using values not yet overwritten in the current pass.</p>
+            <pre data-lang="pseudocode"><code><span class="fn">KNAPSACK-1D</span>(wt[1..n], val[1..n], W):
+    dp[0..W] = 0
+
+    <span class="kw">for</span> i = 1 <span class="kw">to</span> n:
+        <span class="kw">for</span> w = W <span class="kw">downto</span> wt[i]:     <span class="cm">// REVERSE order is essential</span>
+            dp[w] = max(dp[w], dp[w - wt[i]] + val[i])
+
+    <span class="kw">return</span> dp[W]</code></pre>
+
+            <h4 class="mini-heading">Worked Trace</h4>
+            <p>Items: (val=60,wt=10), (val=100,wt=20), (val=120,wt=30); Capacity W = 50.</p>
+            <table class="dp-grid">
+                <thead><tr><th>i \ w</th><th>0</th><th>10</th><th>20</th><th>30</th><th>40</th><th>50</th></tr></thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>1 (60,10)</td><td>0</td><td>60</td><td>60</td><td>60</td><td>60</td><td>60</td></tr>
+                    <tr><td>2 (100,20)</td><td>0</td><td>60</td><td>100</td><td>160</td><td>160</td><td>160</td></tr>
+                    <tr><td>3 (120,30)</td><td>0</td><td>60</td><td>100</td><td>160</td><td>180</td><td class="hl">220</td></tr>
+                </tbody>
+            </table>
+            <p><b>Optimal value = 220</b> (take items 2 and 3: weight 20+30=50, value 100+120=220).</p>
+
+            <div class="badges">
+                <span class="badge-pill">Time: <b>O(n × W)</b></span>
+                <span class="badge-pill">2D Space: <b>O(n × W)</b></span>
+                <span class="badge-pill">1D Optimized Space: <b>O(W)</b></span>
+                <span class="badge-pill">Pseudo-polynomial (runtime depends on the value of W, not just input size n)</span>
+            </div>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Matrix Chain Multiplication (MCM)<span class="tier tier-core">Core</span></h3>
+            <p>
+                Given a chain of matrices, find the optimal parenthesization (multiplication order) that
+                minimizes total scalar multiplications. Matrix multiplication is associative, so order
+                affects only cost, never the final result.
+            </p>
+            <div class="box">
+                <p>
+                    Dimensions given as <code class="inline">p[0], p[1], ..., p[n]</code>, so matrix
+                    <code class="inline">Aᵢ</code> has dimension <code class="inline">p[i-1] × p[i]</code>.
+                    Let <code class="inline">dp[i][j]</code> = minimum cost to multiply
+                    <code class="inline">Aᵢ...Aⱼ</code>.
+                </p>
+                <p>
+                    <code class="inline">dp[i][i] = 0</code><br>
+                    <code class="inline">dp[i][j] = min over k (i ≤ k &lt; j) of { dp[i][k] + dp[k+1][j] + p[i-1]·p[k]·p[j] }</code>
+                </p>
+            </div>
+            <pre data-lang="pseudocode"><code><span class="fn">MATRIX-CHAIN-ORDER</span>(p[0..n]):
+    <span class="kw">for</span> i = 1 <span class="kw">to</span> n: dp[i][i] = 0
+
+    <span class="kw">for</span> len = 2 <span class="kw">to</span> n:                 <span class="cm">// chain length</span>
+        <span class="kw">for</span> i = 1 <span class="kw">to</span> n - len + 1:
+            j = i + len - 1
+            dp[i][j] = INFINITY
+            <span class="kw">for</span> k = i <span class="kw">to</span> j - 1:
+                cost = dp[i][k] + dp[k+1][j] + p[i-1]*p[k]*p[j]
+                <span class="kw">if</span> cost &lt; dp[i][j]:
+                    dp[i][j] = cost
+                    split[i][j] = k          <span class="cm">// remember the split point</span>
+
+    <span class="kw">return</span> dp[1][n]</code></pre>
+            <p>The <code class="inline">split[][]</code> table lets you reconstruct the actual optimal parenthesization by recursively splitting at the recorded k.</p>
+            <div class="badges">
+                <span class="badge-pill">Time: <b>O(n³)</b></span>
+                <span class="badge-pill">Space: <b>O(n²)</b></span>
+            </div>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Longest Increasing Subsequence (LIS)<span class="tier tier-advanced">Advanced</span></h3>
+            <p>Given an array, find the length of the longest strictly increasing subsequence.</p>
+            <div class="box">
+                <p><code class="inline">dp[i]</code> = length of the LIS ending exactly at index i.</p>
+                <p><code class="inline">dp[i] = 1 + max( dp[j] )</code> for all <code class="inline">j &lt; i</code> where <code class="inline">arr[j] &lt; arr[i]</code>; if no such j exists, <code class="inline">dp[i] = 1</code>.</p>
+            </div>
+            <pre data-lang="pseudocode"><code><span class="cm">// O(n^2) DP</span>
+<span class="fn">LIS</span>(arr[1..n]):
+    <span class="kw">for</span> i = 1 <span class="kw">to</span> n: dp[i] = 1
+    <span class="kw">for</span> i = 2 <span class="kw">to</span> n:
+        <span class="kw">for</span> j = 1 <span class="kw">to</span> i - 1:
+            <span class="kw">if</span> arr[j] &lt; arr[i] <span class="kw">and</span> dp[j] + 1 &gt; dp[i]:
+                dp[i] = dp[j] + 1
+    <span class="kw">return</span> max(dp[1..n])
+
+<span class="cm">// O(n log n) using patience-sorting / binary search</span>
+<span class="fn">LIS-FAST</span>(arr[1..n]):
+    tails = []                       <span class="cm">// tails[k] = smallest possible tail of an increasing</span>
+                                      <span class="cm">// subsequence of length k+1 found so far</span>
+    <span class="kw">for</span> each x in arr:
+        pos = lower_bound(tails, x)  <span class="cm">// first index with tails[pos] >= x</span>
+        <span class="kw">if</span> pos == length(tails):
+            append x to tails
+        <span class="kw">else</span>:
+            tails[pos] = x
+    <span class="kw">return</span> length(tails)</code></pre>
+            <div class="badges">
+                <span class="badge-pill">Basic DP: <b>O(n²)</b> time, O(n) space</span>
+                <span class="badge-pill">Patience sorting: <b>O(n log n)</b> time</span>
+            </div>
+
+            <h3 class="sub-heading">Coin Change<span class="tier tier-advanced">Advanced</span></h3>
+            <p><b>Variant A — Minimum coins</b> to make an amount (unbounded supply of each denomination):</p>
+            <div class="box">
+                <p><code class="inline">dp[0] = 0</code>; &nbsp; <code class="inline">dp[a] = min over coin c ≤ a of { dp[a-c] + 1 }</code></p>
+            </div>
+            <p><b>Variant B — Count the number of ways</b> to make an amount (order doesn't matter — process coins one denomination at a time to avoid counting permutations as distinct):</p>
+            <div class="box">
+                <p><code class="inline">ways[0] = 1</code>; &nbsp; for each coin c, for a from c to amount: <code class="inline">ways[a] += ways[a-c]</code></p>
+            </div>
+            <pre data-lang="pseudocode"><code><span class="cm">// Minimum coins</span>
+<span class="fn">MIN-COINS</span>(coins[1..m], amount):
+    dp[0] = 0
+    <span class="kw">for</span> a = 1 <span class="kw">to</span> amount: dp[a] = INFINITY
+    <span class="kw">for</span> a = 1 <span class="kw">to</span> amount:
+        <span class="kw">for</span> each c in coins:
+            <span class="kw">if</span> c ≤ a <span class="kw">and</span> dp[a-c] + 1 &lt; dp[a]:
+                dp[a] = dp[a-c] + 1
+    <span class="kw">return</span> dp[amount] <span class="kw">or</span> "impossible" <span class="kw">if</span> still INFINITY
+
+<span class="cm">// Count number of ways (order-independent)</span>
+<span class="fn">COUNT-WAYS</span>(coins[1..m], amount):
+    ways[0] = 1
+    <span class="kw">for</span> a = 1 <span class="kw">to</span> amount: ways[a] = 0
+    <span class="kw">for</span> each c in coins:
+        <span class="kw">for</span> a = c <span class="kw">to</span> amount:
+            ways[a] = ways[a] + ways[a-c]
+    <span class="kw">return</span> ways[amount]</code></pre>
+            <div class="badges">
+                <span class="badge-pill">Time: <b>O(amount × coins)</b></span>
+                <span class="badge-pill">Space: <b>O(amount)</b></span>
+            </div>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">DP Complexity Classes &amp; Design Notes<span class="tier tier-advanced">Advanced</span></h3>
+            <ul>
+                <li><b>Pseudo-polynomial time:</b> algorithms like Knapsack and Coin Change run in time polynomial in the <i>numeric value</i> of the input (e.g. W or amount), not in the number of bits needed to represent it — so they're technically exponential in input <i>size</i> for very large numeric values. This is why Knapsack is weakly NP-complete rather than solvable in strict polynomial time for arbitrary W.</li>
+                <li><b>Choosing the state:</b> a good DP state captures exactly the information needed to make future decisions — no more, no less. Too little state breaks correctness; too much state blows up time/space unnecessarily.</li>
+                <li><b>Space-time tradeoffs:</b> when only the previous row/column of a 2D table is needed, roll the table down to O(n) or O(1) space — a very common last-step optimization in exam answers.</li>
+            </ul>
+
+            <h3 class="sub-heading">DP vs Greedy vs Divide &amp; Conquer<span class="tier tier-advanced">Advanced</span></h3>
+            <table>
+                <thead><tr><th>Aspect</th><th>Dynamic Programming</th><th>Greedy</th><th>Divide &amp; Conquer</th></tr></thead>
+                <tbody>
+                    <tr><td>Subproblems</td><td>Overlapping</td><td>N/A (single path of choices)</td><td>Usually disjoint</td></tr>
+                    <tr><td>Decision</td><td>Explores all valid choices via recurrence</td><td>Makes one locally-optimal choice, never revisits</td><td>Splits, solves independently, combines</td></tr>
+                    <tr><td>Optimality</td><td>Globally optimal (if optimal substructure + overlap hold)</td><td>Optimal only if the greedy-choice property holds</td><td>Depends on the problem</td></tr>
+                    <tr><td>Example</td><td>0/1 Knapsack, LCS, MCM</td><td>Fractional Knapsack, Huffman, MST</td><td>Merge Sort, Quick Sort, Binary Search</td></tr>
+                </tbody>
+            </table>
+
+            <div class="box exam">
+                <div class="box-title">Likely Exam Questions</div>
+                <ul>
+                    <li>Fill out the DP table by hand for a small 0/1 Knapsack instance and trace back the chosen items.</li>
+                    <li>Explain optimal substructure and overlapping subproblems with a concrete example.</li>
+                    <li>Compare memoization vs tabulation — trade-offs in time, space, ease of implementation.</li>
+                    <li>Derive the recurrence for MCM and compute minimum multiplication cost for a given dimension sequence.</li>
+                    <li>Explain why 0/1 Knapsack cannot be solved correctly using a greedy approach (give a counter-example).</li>
+                    <li>Explain the reverse-iteration requirement in the space-optimized 1D Knapsack.</li>
+                    <li>Derive the LIS recurrence and trace it on a short array.</li>
+                </ul>
+            </div>
+
+        </section>
+
+
+        <!-- =========================================================
+             TOPIC 04 — LONGEST COMMON SUBSEQUENCE
+        ========================================================== -->
+        <section id="lcs">
+
+            <div class="section-label">Topic 04</div>
+            <h2>Longest Common Subsequence (LCS)</h2>
+            <p class="intro">
+                A classic Dynamic Programming problem: given two sequences, find the length (and content)
+                of the longest subsequence present in both — where a subsequence need not be contiguous,
+                but must preserve relative order.
+            </p>
+
+            <h3 class="sub-heading">Subsequence vs Substring<span class="tier tier-basic">Basic</span></h3>
+            <ul>
+                <li><b>Subsequence:</b> derived by deleting zero or more characters <b>without</b> changing the relative order of the remaining characters. Characters need not be contiguous. E.g. "ACE" is a subsequence of "ABCDE".</li>
+                <li><b>Substring:</b> a <b>contiguous</b> block of characters. E.g. "BCD" is a substring of "ABCDE", but "ACE" is not.</li>
+            </ul>
+            <div class="box">
+                <div class="box-title">Definition — LCS</div>
+                <p>
+                    Given two strings <code class="inline">X</code> (length m) and <code class="inline">Y</code>
+                    (length n), the LCS is the longest sequence that is a subsequence of <b>both</b>.
+                </p>
+                <p>
+                    Example: <code class="inline">X = "ABCBDAB"</code>, <code class="inline">Y = "BDCABA"</code>
+                    → LCS = <code class="inline">"BCBA"</code> or <code class="inline">"BDAB"</code> (length 4).
+                </p>
+            </div>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Recurrence Derivation<span class="tier tier-core">Core</span></h3>
+            <p>Let <code class="inline">dp[i][j]</code> = length of LCS of <code class="inline">X[1..i]</code> and <code class="inline">Y[1..j]</code>.</p>
+            <div class="box">
+                <p><code class="inline">dp[i][0] = dp[0][j] = 0</code> &nbsp;(base case — an empty prefix has LCS length 0)</p>
+                <p>
+                    <code class="inline">dp[i][j] = dp[i-1][j-1] + 1</code> &nbsp;if <code class="inline">X[i] == Y[j]</code><br>
+                    <code class="inline">dp[i][j] = max( dp[i-1][j], dp[i][j-1] )</code> &nbsp;if <code class="inline">X[i] ≠ Y[j]</code>
+                </p>
+            </div>
+            <p>
+                <b>Why this holds:</b> if the last characters of both prefixes match, they must both
+                belong to the LCS (a proof by contradiction shows any LCS not using this matched pair can
+                be extended by adding it, or rearranged to include it without loss). So the LCS extends the
+                LCS of the two shorter prefixes by 1. If they don't match, <b>at least one</b> of
+                <code class="inline">X[i]</code> or <code class="inline">Y[j]</code> cannot be part of a
+                common LCS ending exactly there — so we take the better of excluding the last character of
+                <code class="inline">X</code> or of <code class="inline">Y</code>.
+            </p>
+
+            <h4 class="mini-heading">Pseudocode — Length Only</h4>
+            <pre data-lang="pseudocode"><code><span class="fn">LCS-LENGTH</span>(X, Y):
+    m = length(X); n = length(Y)
+    <span class="kw">for</span> i = 0 <span class="kw">to</span> m: dp[i][0] = 0
+    <span class="kw">for</span> j = 0 <span class="kw">to</span> n: dp[0][j] = 0
+
+    <span class="kw">for</span> i = 1 <span class="kw">to</span> m:
+        <span class="kw">for</span> j = 1 <span class="kw">to</span> n:
+            <span class="kw">if</span> X[i] == Y[j]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            <span class="kw">else</span>:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+
+    <span class="kw">return</span> dp[m][n]</code></pre>
+
+            <h4 class="mini-heading">Pseudocode — Reconstructing the Actual LCS String</h4>
+            <p>Backtrack from <code class="inline">dp[m][n]</code>: if characters matched, that character is part of the LCS and both indices move diagonally; otherwise move toward whichever neighbor cell holds the larger value.</p>
+            <pre data-lang="pseudocode"><code><span class="fn">BUILD-LCS</span>(X, Y, dp):
+    i = length(X); j = length(Y)
+    result = ""
+
+    <span class="kw">while</span> i &gt; 0 <span class="kw">and</span> j &gt; 0:
+        <span class="kw">if</span> X[i] == Y[j]:
+            result = X[i] + result      <span class="cm">// prepend matched character</span>
+            i = i - 1; j = j - 1
+        <span class="kw">else if</span> dp[i-1][j] ≥ dp[i][j-1]:
+            i = i - 1
+        <span class="kw">else</span>:
+            j = j - 1
+
+    <span class="kw">return</span> result</code></pre>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Worked DP Table<span class="tier tier-core">Core</span></h3>
+            <p>For <code class="inline">X = "ABCBDAB"</code>, <code class="inline">Y = "BDCABA"</code>:</p>
+            <table class="dp-grid">
+                <thead>
+                    <tr><th></th><th>""</th><th>B</th><th>D</th><th>C</th><th>A</th><th>B</th><th>A</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>""</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>A</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                    <tr><td>B</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>2</td><td>2</td></tr>
+                    <tr><td>C</td><td>0</td><td>1</td><td>1</td><td>2</td><td>2</td><td>2</td><td>2</td></tr>
+                    <tr><td>B</td><td>0</td><td>1</td><td>1</td><td>2</td><td>2</td><td>3</td><td>3</td></tr>
+                    <tr><td>D</td><td>0</td><td>1</td><td>2</td><td>2</td><td>2</td><td>3</td><td>3</td></tr>
+                    <tr><td>A</td><td>0</td><td>1</td><td>2</td><td>2</td><td>3</td><td>3</td><td>4</td></tr>
+                    <tr><td>B</td><td>0</td><td>1</td><td>2</td><td>2</td><td>3</td><td>4</td><td class="hl">4</td></tr>
+                </tbody>
+            </table>
+            <p>Bottom-right cell = <b>4</b> → LCS length is 4 (one valid LCS: <code class="inline">"BCBA"</code>). Trace diagonal moves on matches to see exactly which characters were included.</p>
+
+            <hr class="divider">
+
+            <h3 class="sub-heading">Space Optimization<span class="tier tier-advanced">Advanced</span></h3>
+            <p>
+                If only the <b>length</b> is needed (not the actual subsequence), the table can be
+                compressed to two 1D arrays — a "previous row" and a "current row" — reducing space from
+                <code class="inline">O(m×n)</code> to <code class="inline">O(min(m,n))</code>, since each
+                row only ever depends on the row directly above it.
+            </p>
+            <pre data-lang="pseudocode"><code><span class="fn">LCS-LENGTH-OPTIMIZED</span>(X, Y):
+    m = length(X); n = length(Y)
+    prev[0..n] = 0
+    cur[0..n]  = 0
+
+    <span class="kw">for</span> i = 1 <span class="kw">to</span> m:
+        <span class="kw">for</span> j = 1 <span class="kw">to</span> n:
+            <span class="kw">if</span> X[i] == Y[j]:
+                cur[j] = prev[j-1] + 1
+            <span class="kw">else</span>:
+                cur[j] = max(prev[j], cur[j-1])
+        prev = cur                <span class="cm">// shift current row into previous for next iteration</span>
+
+    <span class="kw">return</span> prev[n]</code></pre>
+            <div class="box warn">
+                <div class="box-title">Trade-off</div>
+                <p>This optimization loses the full history needed to reconstruct the actual LCS string — reconstruction under O(n) space requires more advanced techniques (e.g. Hirschberg's algorithm, which recursively splits the problem to reconstruct the LCS in O(m+n) space).</p>
+            </div>
+
+            <div class="badges">
+                <span class="badge-pill">Time: <b>O(m × n)</b></span>
+                <span class="badge-pill">Space (full table): <b>O(m × n)</b></span>
+                <span class="badge-pill">Space (length only): <b>O(min(m, n))</b></span>
+            </div>
+
+            <h3 class="sub-heading">Related Problems &amp; Extensions<span class="tier tier-advanced">Advanced</span></h3>
+
+            <h4 class="mini-heading">Longest Common Substring</h4>
+            <p>Like LCS but the match must be <b>contiguous</b>. The recurrence resets to 0 on a mismatch instead of taking a max, and the answer is the maximum value anywhere in the table (not necessarily the bottom-right cell).</p>
+            <pre data-lang="pseudocode"><code><span class="kw">if</span> X[i] == Y[j]:
+    dp[i][j] = dp[i-1][j-1] + 1
+    answer = max(answer, dp[i][j])
+<span class="kw">else</span>:
+    dp[i][j] = 0</code></pre>
+
+            <h4 class="mini-heading">Edit Distance (Levenshtein Distance)</h4>
+            <p>Generalizes LCS by allowing insert, delete, and replace operations (each with a cost) to transform X into Y with minimum total operations.</p>
+            <div class="box">
+                <p>
+                    <code class="inline">dp[i][j] = dp[i-1][j-1]</code> if <code class="inline">X[i] == Y[j]</code><br>
+                    <code class="inline">dp[i][j] = 1 + min( dp[i-1][j], dp[i][j-1], dp[i-1][j-1] )</code> otherwise &nbsp;<span style="color:#68747e">(delete, insert, replace)</span>
+                </p>
+            </div>
+
+            <h4 class="mini-heading">Shortest Common Supersequence (SCS)</h4>
+            <p>The shortest string that contains both X and Y as subsequences.</p>
+            <div class="box">
+                <p><code class="inline">SCS length = m + n − LCS(X, Y)</code> — every character not shared must appear once, and shared characters (the LCS) are reused rather than duplicated.</p>
+            </div>
+
+            <h4 class="mini-heading">LCS of Three Strings</h4>
+            <p>Extend to a 3D DP table <code class="inline">dp[i][j][k]</code> over prefixes of X, Y, Z:</p>
+            <pre data-lang="pseudocode"><code><span class="kw">if</span> X[i]==Y[j] <span class="kw">and</span> Y[j]==Z[k]:
+    dp[i][j][k] = dp[i-1][j-1][k-1] + 1
+<span class="kw">else</span>:
+    dp[i][j][k] = max(dp[i-1][j][k], dp[i][j-1][k], dp[i][j][k-1])</code></pre>
+            <div class="badges">
+                <span class="badge-pill">3-string LCS Time: <b>O(m·n·p)</b></span>
+            </div>
+
+            <h4 class="mini-heading">Printing All LCSs</h4>
+            <p>When the DP table has multiple equally-long paths (ties in the max), more than one distinct LCS of maximum length can exist. Enumerating all of them requires backtracking through every tie branch, which can be exponential in the worst case — typically done with memoized recursive set-building rather than a simple loop.</p>
+
+            <div class="box exam">
+                <div class="box-title">Likely Exam Questions</div>
+                <ul>
+                    <li>Build the full DP table by hand for two given strings and state the LCS length and one valid LCS string.</li>
+                    <li>Derive the recurrence relation for LCS and justify each case.</li>
+                    <li>Backtrack through a completed DP table to reconstruct the actual LCS.</li>
+                    <li>Compare LCS with Longest Common Substring and Edit Distance — how do the recurrences differ?</li>
+                    <li>Explain how to reduce LCS space complexity to O(n), and why reconstruction then becomes harder.</li>
+                    <li>Compute the Shortest Common Supersequence length using the LCS result.</li>
+                    <li>Extend the LCS recurrence to three strings and state its time complexity.</li>
+                </ul>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script>
+        (function () {
+            var navSticky = document.getElementById('navSticky');
+            function onScroll() {
+                navSticky.classList.toggle('stuck', window.scrollY > 12);
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+        })();
+    </script>
+
+</body>
+
+</html>
