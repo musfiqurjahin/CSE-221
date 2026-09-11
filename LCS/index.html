@@ -2,933 +2,560 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>LCS Visualizer</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>LCS Visualizer Pro</title>
 
 <style>
-/* =========================================================
-   RESET
-========================================================= */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+:root{
+    --bg:#05080d;
+    --panel:#0b1119;
+    --panel2:#0f1722;
+    --panel3:#121c29;
+    --border:#1d2a3a;
+    --border2:#2a3a50;
+    --text:#e8eef6;
+    --muted:#718096;
+    --blue:#58a6ff;
+    --green:#3fb950;
+    --yellow:#d29922;
+    --purple:#bc8cff;
+    --red:#f85149;
+    --cyan:#39d9ff;
+    --shadow:0 12px 40px rgba(0,0,0,.3);
 }
 
-html,
-body {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+*{
+    box-sizing:border-box;
 }
 
-:root {
-    --bg: #070a0f;
-    --panel: #0b1017;
-    --panel2: #0e151e;
-    --panel3: #111a25;
-
-    --border: #202c3b;
-    --border2: #2c3b4e;
-
-    --text: #e7edf5;
-    --muted: #758397;
-    --muted2: #4d5c70;
-
-    --blue: #58a6ff;
-    --cyan: #39d0d8;
-    --green: #3fb950;
-    --yellow: #d29922;
-    --purple: #bc8cff;
-    --red: #f85149;
-
-    --radius: 12px;
+html,body{
+    width:100%;
+    height:100%;
+    margin:0;
 }
 
-/* =========================================================
-   BODY
-========================================================= */
-
-body {
+body{
+    overflow:hidden;
     background:
-        radial-gradient(
-            circle at 15% 15%,
-            rgba(88,166,255,.07),
-            transparent 28%
-        ),
-        radial-gradient(
-            circle at 85% 85%,
-            rgba(188,140,255,.05),
-            transparent 30%
-        ),
+        radial-gradient(circle at 15% 0%,rgba(88,166,255,.08),transparent 30%),
+        radial-gradient(circle at 85% 100%,rgba(188,140,255,.06),transparent 30%),
         var(--bg);
-
-    color: var(--text);
-
-    font-family:
-        Inter,
-        "Segoe UI",
-        Arial,
-        sans-serif;
+    color:var(--text);
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
 
-/* =========================================================
-   APP
-========================================================= */
-
-.app {
-    width: 100%;
-    height: 100%;
-
-    display: grid;
-
-    grid-template-rows:
-        58px
-        minmax(0, 1fr);
+button,input{
+    font:inherit;
 }
 
-/* =========================================================
-   HEADER
-========================================================= */
+button{
+    cursor:pointer;
+}
 
-.header {
-    height: 58px;
+.app{
+    width:100vw;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+/* ================= HEADER ================= */
 
-    padding: 0 16px;
+.header{
+    height:62px;
+    flex:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    border-bottom:1px solid var(--border);
+    background:rgba(5,8,13,.86);
+    backdrop-filter:blur(16px);
+    z-index:20;
+}
 
-    border-bottom: 1px solid var(--border);
+.brand{
+    display:flex;
+    align-items:center;
+    gap:11px;
+}
 
+.logo{
+    width:36px;
+    height:36px;
+    border-radius:9px;
+    display:grid;
+    place-items:center;
+    color:var(--blue);
+    border:1px solid rgba(88,166,255,.35);
+    background:rgba(88,166,255,.08);
+    font:bold 12px monospace;
+    box-shadow:0 0 20px rgba(88,166,255,.05);
+}
+
+.title{
+    font-size:14px;
+    font-weight:800;
+}
+
+.subtitle{
+    color:#66758a;
+    font:9px monospace;
+    margin-top:3px;
+    letter-spacing:.4px;
+}
+
+.headerRight{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#718096;
+    font:10px monospace;
+}
+
+.statusDot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--green);
+    box-shadow:0 0 10px rgba(63,185,80,.7);
+}
+
+/* ================= INPUT BAR ================= */
+
+.inputBar{
+    min-height:74px;
+    flex:none;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 14px;
+    border-bottom:1px solid var(--border);
+    background:rgba(9,14,21,.92);
+    overflow-x:auto;
+}
+
+.inputBox{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    flex:none;
+}
+
+.inputLabel{
+    color:#718096;
+    font:700 10px monospace;
+}
+
+.seqInput{
+    width:230px;
+    height:38px;
+    padding:0 11px;
+    outline:none;
+    color:var(--text);
+    background:#070c12;
+    border:1px solid var(--border);
+    border-radius:8px;
+    font:13px monospace;
+    transition:.2s;
+}
+
+.seqInput:focus{
+    border-color:rgba(88,166,255,.55);
+    box-shadow:0 0 0 3px rgba(88,166,255,.06);
+}
+
+.divider{
+    width:1px;
+    height:32px;
+    flex:none;
+    background:var(--border);
+}
+
+.btn{
+    height:36px;
+    padding:0 12px;
+    border-radius:7px;
+    border:1px solid var(--border);
+    color:#aebccc;
+    background:#0b121b;
+    font-size:10px;
+    font-weight:750;
+    white-space:nowrap;
+    transition:.16s;
+}
+
+.btn:hover{
+    color:white;
+    border-color:var(--border2);
+    background:#111b28;
+}
+
+.btn:active{
+    transform:translateY(1px);
+}
+
+.btn.primary{
+    color:white;
+    border-color:rgba(88,166,255,.42);
+    background:rgba(88,166,255,.12);
+}
+
+.btn.play{
+    color:#7ee787;
+    border-color:rgba(63,185,80,.35);
+    background:rgba(63,185,80,.07);
+}
+
+.btn.active{
+    color:white;
+    border-color:rgba(188,140,255,.45);
+    background:rgba(188,140,255,.12);
+}
+
+.speed{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#65748a;
+    font:9px monospace;
+    white-space:nowrap;
+}
+
+.speed input{
+    width:80px;
+}
+
+/* ================= RESULT ================= */
+
+.result{
+    min-height:54px;
+    flex:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:7px 16px;
+    border-bottom:1px solid var(--border);
+    background:rgba(6,10,16,.78);
+}
+
+.resultMain{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+}
+
+.resultTag{
+    color:#68778a;
+    font:10px monospace;
+}
+
+.resultValue{
+    color:#7ee787;
+    font:800 18px monospace;
+    letter-spacing:1px;
+    white-space:nowrap;
+}
+
+.resultStats{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    color:#65748a;
+    font:9px monospace;
+}
+
+.resultStats strong{
+    color:#b8c5d6;
+}
+
+.progress{
+    position:absolute;
+    left:0;
+    bottom:-1px;
+    height:1px;
+    width:0%;
+    background:var(--purple);
+    box-shadow:0 0 8px rgba(188,140,255,.7);
+    transition:width .12s linear;
+}
+
+/* ================= WORKSPACE ================= */
+
+.workspace{
+    position:relative;
+    flex:1;
+    min-height:0;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:9px;
+    padding:9px;
+}
+
+.panel{
+    min-width:0;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    border:1px solid var(--border);
+    border-radius:11px;
+    background:rgba(10,16,24,.9);
+    box-shadow:var(--shadow);
+}
+
+.panelHeader{
+    height:48px;
+    flex:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 11px;
+    border-bottom:1px solid var(--border);
+    background:rgba(14,21,31,.9);
+}
+
+.panelName{
+    font-size:12px;
+    font-weight:800;
+}
+
+.panelDesc{
+    color:#637289;
+    font:8px monospace;
+    margin-top:2px;
+}
+
+.tools{
+    display:flex;
+    align-items:center;
+    gap:4px;
+}
+
+.tool{
+    min-width:29px;
+    height:29px;
+    display:grid;
+    place-items:center;
+    padding:0 7px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    color:#9dacbf;
+    background:#09101a;
+    font-size:13px;
+}
+
+.tool:hover{
+    color:white;
+    border-color:#3a506a;
+    background:#111b29;
+}
+
+.zoomText{
+    min-width:46px;
+    text-align:center;
+    color:#68778a;
+    font:9px monospace;
+}
+
+.modeBadge{
+    padding:4px 6px;
+    margin-left:4px;
+    color:#7da4ca;
+    border:1px solid rgba(88,166,255,.16);
+    border-radius:5px;
+    background:rgba(88,166,255,.07);
+    font:8px monospace;
+}
+
+/* ================= VIEWPORT ================= */
+
+.viewport{
+    position:relative;
+    flex:1;
+    min-height:0;
+    overflow:hidden;
+    cursor:grab;
     background:
-        rgba(7,10,15,.88);
-
-    backdrop-filter: blur(14px);
-}
-
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.brand-icon {
-    width: 36px;
-    height: 36px;
-
-    display: grid;
-    place-items: center;
-
-    border-radius: 9px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #1f6feb,
-            #8957e5
-        );
-
-    font-family: monospace;
-    font-weight: 900;
-
-    box-shadow:
-        0 0 22px rgba(88,166,255,.2);
-}
-
-.brand-title {
-    font-size: 15px;
-    font-weight: 700;
-}
-
-.brand-subtitle {
-    font-size: 9px;
-    color: var(--muted);
-    margin-top: 2px;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.status {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-    color: var(--muted);
-
-    font-size: 10px;
-}
-
-.status-dot {
-    width: 7px;
-    height: 7px;
-
-    border-radius: 50%;
-
-    background: var(--green);
-
-    box-shadow:
-        0 0 10px rgba(63,185,80,.8);
-}
-
-/* =========================================================
-   MAIN
-========================================================= */
-
-.main {
-    min-height: 0;
-
-    display: grid;
-
-    grid-template-columns:
-        235px
-        minmax(0, 1fr);
-
-    gap: 9px;
-
-    padding: 9px;
-}
-
-/* =========================================================
-   SIDEBAR
-========================================================= */
-
-.sidebar {
-    min-height: 0;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(14,21,30,.96),
-            rgba(9,14,21,.96)
-        );
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        var(--radius);
-
-    padding: 12px;
-
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
-}
-
-.label {
-    color: var(--muted);
-
-    font-size: 9px;
-
-    text-transform: uppercase;
-
-    letter-spacing: 1.4px;
-
-    margin-bottom: 7px;
-}
-
-.input-box {
-    margin-bottom: 9px;
-}
-
-.input-title {
-    display: flex;
-    justify-content: space-between;
-
-    color: #a9b6c7;
-
-    font-size: 10px;
-
-    margin-bottom: 5px;
-}
-
-.input-title span {
-    color: var(--blue);
-    font-family: monospace;
-}
-
-.input {
-    width: 100%;
-    height: 33px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius: 7px;
-
-    background:
-        #070c12;
-
-    color:
-        var(--text);
-
-    outline: none;
-
-    padding: 0 9px;
-
-    font-family: monospace;
-
-    font-size: 12px;
-
-    transition: .2s;
-}
-
-.input:focus {
-    border-color: var(--blue);
-
-    box-shadow:
-        0 0 0 2px
-        rgba(88,166,255,.08);
-}
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-.button-grid {
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 5px;
-
-    margin-top: 2px;
-}
-
-button {
-    height: 31px;
-
-    border:
-        1px solid var(--border2);
-
-    border-radius: 7px;
-
-    background:
-        var(--panel2);
-
-    color:
-        var(--text);
-
-    font-size: 9px;
-
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        background .15s,
-        border .15s,
-        transform .15s;
-}
-
-button:hover {
-    background:
-        #172231;
-
-    border-color:
-        var(--blue);
-
-    transform:
-        translateY(-1px);
-}
-
-button.primary {
-    background:
-        #1f6feb;
-
-    border-color:
-        #1f6feb;
-}
-
-button.primary:hover {
-    background:
-        #388bfd;
-}
-
-button.green {
-    color:
-        #7ee787;
-}
-
-button.yellow {
-    color:
-        #e3b341;
-}
-
-button.red {
-    color:
-        #ff7b72;
-}
-
-/* =========================================================
-   SPEED
-========================================================= */
-
-.speed {
-    margin-top: 14px;
-}
-
-.speed-row {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-}
-
-.speed-row input {
-    flex: 1;
-
-    accent-color:
-        var(--blue);
-}
-
-.speed-value {
-    width: 28px;
-
-    text-align: right;
-
-    font-size: 9px;
-
-    color:
-        var(--blue);
-
-    font-family:
-        monospace;
-}
-
-/* =========================================================
-   VIEW CONTROLS
-========================================================= */
-
-.view-control {
-    margin-top: 13px;
-}
-
-.zoom-row {
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr 1fr;
-
-    gap: 4px;
-}
-
-.zoom-row button {
-    height: 27px;
-}
-
-/* =========================================================
-   ALGORITHM INFO
-========================================================= */
-
-.algorithm {
-    margin-top: auto;
-
-    border-top:
-        1px solid var(--border);
-
-    padding-top: 10px;
-}
-
-.info-row {
-    display: flex;
-
-    justify-content: space-between;
-
-    margin:
-        5px 0;
-
-    color:
-        var(--muted);
-
-    font-size: 9px;
-}
-
-.info-row strong {
-    color:
-        var(--text);
-
-    font-family:
-        monospace;
-
-    font-size: 9px;
-}
-
-/* =========================================================
-   LEGEND
-========================================================= */
-
-.legend {
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 5px;
-
-    margin-top: 8px;
-}
-
-.legend-item {
-    display: flex;
-
-    align-items: center;
-
-    gap: 5px;
-
-    color:
-        var(--muted);
-
-    font-size: 8px;
-}
-
-.legend-dot {
-    width: 7px;
-    height: 7px;
-
-    border-radius: 2px;
-}
-
-.match {
-    background:
-        var(--green);
-}
-
-.choice {
-    background:
-        var(--yellow);
-}
-
-.path {
-    background:
-        var(--cyan);
-}
-
-.current {
-    background:
-        var(--purple);
-}
-
-/* =========================================================
-   WORKSPACE
-========================================================= */
-
-.workspace {
-    min-width: 0;
-    min-height: 0;
-
-    display: grid;
-
-    grid-template-rows:
-        43px
-        minmax(0,1fr)
-        83px;
-
-    gap: 9px;
-}
-
-/* =========================================================
-   TOOLBAR
-========================================================= */
-
-.toolbar {
-    min-width: 0;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 5px;
-
-    padding:
-        6px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        var(--radius);
-
-    background:
-        rgba(11,16,23,.94);
-}
-
-.toolbar button {
-    width: 58px;
-
-    height: 29px;
-}
-
-.toolbar-divider {
-    width: 1px;
-    height: 20px;
-
-    background:
-        var(--border);
-
-    margin:
-        0 2px;
-}
-
-.step-info {
-    margin-left: auto;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-}
-
-.step-text {
-    color:
-        var(--muted);
-
-    font-size:
-        8px;
-}
-
-.step-counter {
-    min-width: 48px;
-
-    padding:
-        5px 7px;
-
-    border-radius:
-        5px;
-
-    background:
-        #070c12;
-
-    color:
-        var(--blue);
-
-    font-family:
-        monospace;
-
-    font-size:
-        9px;
-
-    text-align:
-        center;
+        radial-gradient(circle at center,rgba(88,166,255,.035),transparent 65%),
+        linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
+    background-size:auto,24px 24px,24px 24px;
+}
+
+.viewport.dragging{
+    cursor:grabbing;
+}
+
+canvas{
+    position:absolute;
+    left:0;
+    top:0;
 }
 
-/* =========================================================
-   VISUAL AREA
-========================================================= */
-
-.visual-area {
-    min-width: 0;
-    min-height: 0;
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        minmax(0, 1fr);
-
-    gap: 9px;
-}
-
-.card {
-    min-width: 0;
-    min-height: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        var(--radius);
-
-    background:
-        rgba(11,16,23,.95);
-}
-
-.card-header {
-    height: 36px;
-    min-height: 36px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    padding:
-        0 10px;
-
-    border-bottom:
-        1px solid var(--border);
-}
-
-.card-title {
-    font-size:
-        10px;
-
-    font-weight:
-        700;
-}
-
-.card-title span {
-    color:
-        var(--muted);
-
-    font-weight:
-        400;
-
-    margin-left:
-        5px;
-}
-
-.badge {
-    padding:
-        3px 6px;
-
-    border-radius:
-        4px;
-
-    background:
-        #121d2a;
-
-    color:
-        var(--blue);
-
-    font-size:
-        7px;
-
-    letter-spacing:
-        .5px;
-}
-
-.canvas-wrap {
-    position: relative;
-
-    flex: 1;
-
-    min-height: 0;
-
-    overflow: hidden;
+.hint{
+    position:absolute;
+    left:10px;
+    bottom:9px;
+    padding:6px 8px;
+    border:1px solid rgba(255,255,255,.055);
+    border-radius:6px;
+    background:rgba(5,8,13,.78);
+    color:#5f6d80;
+    font:8px monospace;
+    pointer-events:none;
+    backdrop-filter:blur(7px);
 }
-
-canvas {
-    width: 100%;
-    height: 100%;
 
-    display: block;
+.empty{
+    position:absolute;
+    inset:0;
+    display:grid;
+    place-items:center;
+    color:#39485b;
+    font:10px monospace;
+    text-align:center;
+    pointer-events:none;
 }
-
-/* =========================================================
-   RESULT
-========================================================= */
-
-.result {
-    min-width: 0;
-
-    display: grid;
-
-    grid-template-columns:
-        1.5fr
-        .5fr
-        1fr;
 
-    align-items:
-        center;
+/* ================= CELL INFO ================= */
 
-    gap:
-        15px;
-
-    padding:
-        10px 14px;
-
-    border:
-        1px solid var(--border);
-
-    border-radius:
-        var(--radius);
-
-    background:
-        rgba(11,16,23,.95);
+.inspector{
+    position:absolute;
+    right:12px;
+    bottom:12px;
+    width:205px;
+    padding:10px;
+    border:1px solid var(--border2);
+    border-radius:8px;
+    background:rgba(7,11,17,.94);
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+    backdrop-filter:blur(12px);
+    opacity:0;
+    transform:translateY(8px);
+    pointer-events:none;
+    transition:.18s;
+    z-index:5;
 }
 
-.result-label {
-    color:
-        var(--muted);
-
-    font-size:
-        8px;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        1px;
-
-    margin-bottom:
-        4px;
+.inspector.show{
+    opacity:1;
+    transform:translateY(0);
 }
-
-.result-value {
-    font-family:
-        monospace;
 
-    font-size:
-        15px;
-
-    font-weight:
-        600;
-
-    white-space:
-        nowrap;
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
+.inspectorTitle{
+    color:#d8e1ec;
+    font:bold 10px monospace;
+    margin-bottom:8px;
 }
 
-.result-lcs {
-    color:
-        var(--green);
-
-    text-shadow:
-        0 0 16px
-        rgba(63,185,80,.25);
+.inspectorLine{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    color:#65748a;
+    font:9px monospace;
+    padding:3px 0;
 }
-
-.progress-text {
-    display: flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        center;
 
-    font-size:
-        9px;
-
-    color:
-        var(--muted);
+.inspectorLine strong{
+    color:#b9c6d6;
 }
-
-.progress-text b {
-    color:
-        var(--blue);
 
-    font-family:
-        monospace;
+.inspectorDecision{
+    margin-top:6px;
+    padding:6px;
+    border-radius:5px;
+    color:#7ee787;
+    background:rgba(63,185,80,.07);
+    border:1px solid rgba(63,185,80,.12);
+    font:9px monospace;
 }
-
-.progress-track {
-    height:
-        5px;
-
-    margin-top:
-        7px;
 
-    border-radius:
-        20px;
+/* ================= FULLSCREEN ================= */
 
-    background:
-        #070c12;
-
-    overflow:
-        hidden;
+.panel.fullscreen{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    z-index:100;
+    border-radius:0;
 }
-
-.progress-bar {
-    height:
-        100%;
 
-    width:
-        0%;
-
-    background:
-        linear-gradient(
-            90deg,
-            var(--blue),
-            var(--cyan)
-        );
-
-    transition:
-        width .2s;
+.panel.fullscreen .viewport{
+    background-size:auto,28px 28px;
 }
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
 
-@media(max-width: 950px) {
+/* ================= RESPONSIVE ================= */
 
-    .main {
-        grid-template-columns:
-            200px
-            minmax(0,1fr);
+@media(max-width:950px){
+    body{
+        overflow:auto;
     }
 
-    .visual-area {
-        grid-template-columns:
-            minmax(0,1fr)
-            minmax(0,1fr);
+    .app{
+        min-height:100vh;
+        height:auto;
+    }
+
+    .inputBar{
+        flex-wrap:wrap;
+    }
+
+    .workspace{
+        grid-template-columns:1fr;
+        height:1000px;
     }
 }
 
-@media(max-width: 720px) {
-
-    html,
-    body {
-        overflow: auto;
+@media(max-width:600px){
+    .header{
+        height:56px;
+        padding:0 10px;
     }
 
-    .app {
-        height: auto;
-
-        grid-template-rows:
-            58px
-            auto;
+    .subtitle{
+        display:none;
     }
 
-    .main {
-        grid-template-columns:
-            1fr;
-
-        height: auto;
+    .status{
+        display:none;
     }
 
-    .sidebar {
-        min-height:
-            330px;
+    .inputBar{
+        padding:9px;
     }
 
-    .workspace {
-        height:
-            850px;
+    .inputBox{
+        width:100%;
     }
 
-    .visual-area {
-        grid-template-columns:
-            1fr;
+    .seqInput{
+        width:auto;
+        flex:1;
+    }
 
-        grid-template-rows:
-            1fr
-            1fr;
+    .result{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:6px;
+    }
+
+    .workspace{
+        height:1050px;
+        padding:6px;
+    }
+
+    .hint{
+        display:none;
     }
 }
 </style>
@@ -938,177 +565,94 @@ canvas {
 
 <div class="app">
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
+    <!-- HEADER -->
+    <header class="header">
 
-<header class="header">
+        <div class="brand">
 
-    <div class="brand">
+            <div class="logo">LCS</div>
 
-        <div class="brand-icon">
-            L
-        </div>
+            <div>
+                <div class="title">
+                    Longest Common Subsequence
+                </div>
 
-        <div>
-            <div class="brand-title">
-                LCS Visualizer
+                <div class="subtitle">
+                    INTERACTIVE DYNAMIC PROGRAMMING VISUALIZER
+                </div>
             </div>
 
-            <div class="brand-subtitle">
-                Longest Common Subsequence · Dynamic Programming
+        </div>
+
+        <div class="headerRight">
+
+            <div class="status">
+                <span class="statusDot" id="statusDot"></span>
+                <span id="statusText">READY</span>
             </div>
-        </div>
-
-    </div>
-
-    <div class="header-right">
-
-        <div class="status">
-            <span class="status-dot"></span>
-            <span id="headerStatus">
-                READY
-            </span>
-        </div>
-
-    </div>
-
-</header>
-
-
-<!-- =====================================================
-     MAIN
-===================================================== -->
-
-<main class="main">
-
-
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
-
-<aside class="sidebar">
-
-    <div class="label">
-        Input Sequences
-    </div>
-
-
-    <div class="input-box">
-
-        <div class="input-title">
-            <span style="color:#a9b6c7">
-                Sequence S1
-            </span>
-
-            <span id="count1">
-                0
-            </span>
-        </div>
-
-        <input
-            id="s1"
-            class="input"
-            type="text"
-            value="ABCBDAB"
-            autocomplete="off"
-        >
-
-    </div>
-
-
-    <div class="input-box">
-
-        <div class="input-title">
-
-            <span style="color:#a9b6c7">
-                Sequence S2
-            </span>
-
-            <span id="count2">
-                0
-            </span>
 
         </div>
 
-        <input
-            id="s2"
-            class="input"
-            type="text"
-            value="BDCABA"
-            autocomplete="off"
-        >
-
-    </div>
+    </header>
 
 
-    <div class="button-grid">
+    <!-- INPUT / CONTROLS -->
+    <section class="inputBar">
 
-        <button
-            class="primary"
-            onclick="calculate()"
-        >
+        <div class="inputBox">
+
+            <span class="inputLabel">S1</span>
+
+            <input
+                id="s1"
+                class="seqInput"
+                value="ABCBDAB"
+                spellcheck="false"
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <div class="inputBox">
+
+            <span class="inputLabel">S2</span>
+
+            <input
+                id="s2"
+                class="seqInput"
+                value="BDCABA"
+                spellcheck="false"
+                autocomplete="off"
+            >
+
+        </div>
+
+
+        <button class="btn primary" id="calculate">
             Calculate
         </button>
 
-        <button
-            onclick="example()"
-        >
-            Example
-        </button>
-
-        <button
-            class="green"
-            onclick="play()"
-        >
+        <button class="btn play" id="play">
             ▶ Play
         </button>
 
-        <button
-            class="yellow"
-            onclick="pause()"
-        >
-            ❚❚ Pause
+        <button class="btn" id="back">
+            ← Step
         </button>
 
-        <button
-            onclick="back()"
-        >
-            ← Back
-        </button>
-
-        <button
-            onclick="forward()"
-        >
+        <button class="btn" id="forward">
             Step →
         </button>
 
-        <button
-            class="red"
-            onclick="reset()"
-        >
+        <button class="btn" id="reset">
             Reset
         </button>
 
-        <button
-            onclick="complete()"
-        >
-            Finish
-        </button>
+        <div class="divider"></div>
 
-    </div>
-
-
-    <!-- SPEED -->
-
-    <div class="speed">
-
-        <div class="label">
-            Animation Speed
-        </div>
-
-        <div class="speed-row">
-
+        <div class="speed">
+            SPEED
             <input
                 id="speed"
                 type="range"
@@ -1116,425 +660,367 @@ canvas {
                 max="10"
                 value="5"
             >
+            <span id="speedValue">5x</span>
+        </div>
+
+    </section>
+
+
+    <!-- RESULT -->
+    <section class="result">
+
+        <div class="resultMain">
+
+            <span class="resultTag">
+                LCS =
+            </span>
+
+            <span
+                class="resultValue"
+                id="result"
+            >—</span>
+
+        </div>
+
+        <div class="resultStats">
+
+            <span>
+                LENGTH:
+                <strong id="length">—</strong>
+            </span>
+
+            <span>
+                PHASE:
+                <strong id="phase">READY</strong>
+            </span>
+
+            <span>
+                STEP:
+                <strong id="step">0 / 0</strong>
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- WORKSPACE -->
+    <main class="workspace">
+
+
+        <!-- CHOICE -->
+        <section class="panel" id="choicePanel">
+
+            <div class="panelHeader">
+
+                <div>
+                    <div class="panelName">
+                        Choice Diagram
+                    </div>
+
+                    <div class="panelDesc">
+                        RECURSION / DECISION TREE
+                    </div>
+                </div>
+
+
+                <div class="tools">
+
+                    <button class="tool" id="choiceMinus">−</button>
+
+                    <span class="zoomText" id="choiceZoom">
+                        100%
+                    </span>
+
+                    <button class="tool" id="choicePlus">+</button>
+
+                    <button class="tool" id="choiceFit">
+                        ⛶
+                    </button>
+
+                    <button class="tool" id="choiceFull">
+                        ⛶
+                    </button>
+
+                    <span class="modeBadge">
+                        CHOICE
+                    </span>
+
+                </div>
+
+            </div>
+
 
             <div
-                id="speedValue"
-                class="speed-value"
+                class="viewport"
+                id="choiceView"
             >
-                5×
+
+                <canvas id="choiceCanvas"></canvas>
+
+                <div class="empty" id="choiceEmpty">
+                    Calculate two sequences<br>
+                    to generate the choice tree
+                </div>
+
+                <div class="hint">
+                    Drag = Pan &nbsp; • &nbsp;
+                    Wheel = Zoom &nbsp; • &nbsp;
+                    F = Fit
+                </div>
+
             </div>
 
-        </div>
-
-    </div>
+        </section>
 
 
-    <!-- ZOOM -->
+        <!-- LEDGER -->
+        <section class="panel" id="ledgerPanel">
 
-    <div class="view-control">
+            <div class="panelHeader">
 
-        <div class="label">
-            Diagram Zoom
-        </div>
+                <div>
+                    <div class="panelName">
+                        Ledger Diagram
+                    </div>
 
-        <div class="zoom-row">
-
-            <button onclick="zoom(-.1)">
-                −
-            </button>
-
-            <button onclick="zoom(0)">
-                Fit
-            </button>
-
-            <button onclick="zoom(.1)">
-                +
-            </button>
-
-        </div>
-
-    </div>
+                    <div class="panelDesc">
+                        DP MATRIX / TRACEBACK
+                    </div>
+                </div>
 
 
-    <!-- ALGORITHM -->
+                <div class="tools">
 
-    <div class="algorithm">
+                    <button class="tool" id="ledgerMinus">−</button>
 
-        <div class="label">
-            Algorithm
-        </div>
+                    <span class="zoomText" id="ledgerZoom">
+                        100%
+                    </span>
 
-        <div class="info-row">
-            <span>Technique</span>
-            <strong>DP</strong>
-        </div>
+                    <button class="tool" id="ledgerPlus">+</button>
 
-        <div class="info-row">
-            <span>Time</span>
-            <strong>O(m × n)</strong>
-        </div>
+                    <button class="tool" id="ledgerFit">
+                        ⛶
+                    </button>
 
-        <div class="info-row">
-            <span>Space</span>
-            <strong>O(m × n)</strong>
-        </div>
+                    <button class="tool" id="ledgerFull">
+                        ⛶
+                    </button>
 
-        <div class="info-row">
-            <span>State</span>
-            <strong id="state">
-                Ready
-            </strong>
-        </div>
+                    <span class="modeBadge">
+                        DP
+                    </span>
 
+                </div>
 
-        <div class="legend">
-
-            <div class="legend-item">
-                <span class="legend-dot match"></span>
-                Match
             </div>
 
-            <div class="legend-item">
-                <span class="legend-dot choice"></span>
-                Choice
-            </div>
-
-            <div class="legend-item">
-                <span class="legend-dot path"></span>
-                LCS Path
-            </div>
-
-            <div class="legend-item">
-                <span class="legend-dot current"></span>
-                Current
-            </div>
-
-        </div>
-
-    </div>
-
-</aside>
-
-
-<!-- =====================================================
-     WORKSPACE
-===================================================== -->
-
-<section class="workspace">
-
-
-<!-- TOOLBAR -->
-
-<div class="toolbar">
-
-    <button onclick="back()">
-        ← Back
-    </button>
-
-    <button onclick="forward()">
-        Step →
-    </button>
-
-    <div class="toolbar-divider"></div>
-
-    <button
-        class="green"
-        onclick="play()"
-    >
-        ▶ Play
-    </button>
-
-    <button
-        class="yellow"
-        onclick="pause()"
-    >
-        Pause
-    </button>
-
-    <div class="toolbar-divider"></div>
-
-    <button onclick="reset()">
-        Reset
-    </button>
-
-    <div class="step-info">
-
-        <span class="step-text">
-            STEP
-        </span>
-
-        <span
-            id="counter"
-            class="step-counter"
-        >
-            0 / 0
-        </span>
-
-    </div>
-
-</div>
-
-
-<!-- VISUALIZATION -->
-
-<div class="visual-area">
-
-
-<!-- CHOICE DIAGRAM -->
-
-<div class="card">
-
-    <div class="card-header">
-
-        <div class="card-title">
-
-            Choice Diagram
-
-            <span>
-                Recursive Decisions
-            </span>
-
-        </div>
-
-        <div class="badge">
-            CHOICE TREE
-        </div>
-
-    </div>
-
-    <div class="canvas-wrap">
-
-        <canvas
-            id="choiceCanvas"
-        ></canvas>
-
-    </div>
-
-</div>
-
-
-<!-- LEDGER -->
-
-<div class="card">
-
-    <div class="card-header">
-
-        <div class="card-title">
-
-            Ledger Diagram
-
-            <span>
-                DP Table
-            </span>
-
-        </div>
-
-        <div class="badge">
-            LEDGER
-        </div>
-
-    </div>
-
-    <div class="canvas-wrap">
-
-        <canvas
-            id="ledgerCanvas"
-        ></canvas>
-
-    </div>
-
-</div>
-
-
-</div>
-
-
-<!-- RESULT -->
-
-<div class="result">
-
-
-    <div>
-
-        <div class="result-label">
-            Longest Common Subsequence
-        </div>
-
-        <div
-            id="result"
-            class="result-value result-lcs"
-        >
-            —
-        </div>
-
-    </div>
-
-
-    <div>
-
-        <div class="result-label">
-            Length
-        </div>
-
-        <div
-            id="length"
-            class="result-value"
-        >
-            0
-        </div>
-
-    </div>
-
-
-    <div>
-
-        <div class="result-label">
-            Visualization Progress
-        </div>
-
-        <div class="progress-text">
-
-            <span>
-                DP + Backtracking
-            </span>
-
-            <b id="percent">
-                0%
-            </b>
-
-        </div>
-
-        <div class="progress-track">
 
             <div
-                id="progress"
-                class="progress-bar"
-            ></div>
+                class="viewport"
+                id="ledgerView"
+            >
 
-        </div>
+                <canvas id="ledgerCanvas"></canvas>
 
-    </div>
+                <div class="empty" id="ledgerEmpty">
+                    DP matrix will appear here
+                </div>
 
-</div>
+                <div
+                    class="inspector"
+                    id="inspector"
+                >
 
-</section>
+                    <div
+                        class="inspectorTitle"
+                        id="inspectTitle"
+                    >
+                        Cell
+                    </div>
 
-</main>
+                    <div class="inspectorLine">
+                        <span>Position</span>
+                        <strong id="inspectPos">—</strong>
+                    </div>
+
+                    <div class="inspectorLine">
+                        <span>Characters</span>
+                        <strong id="inspectChars">—</strong>
+                    </div>
+
+                    <div class="inspectorLine">
+                        <span>Value</span>
+                        <strong id="inspectValue">—</strong>
+                    </div>
+
+                    <div
+                        class="inspectorDecision"
+                        id="inspectDecision"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+                <div class="hint">
+                    Click cell = Inspect &nbsp; • &nbsp;
+                    Drag = Pan &nbsp; • &nbsp;
+                    Wheel = Zoom
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
 
 </div>
 
 
 <script>
+"use strict";
 
-/* =========================================================
-   VARIABLES
-========================================================= */
+/* ============================================================
+   DOM
+============================================================ */
 
-const s1El =
-    document.getElementById("s1");
+const $ = id => document.getElementById(id);
 
-const s2El =
-    document.getElementById("s2");
+const s1Input = $("s1");
+const s2Input = $("s2");
 
-const choiceCanvas =
-    document.getElementById("choiceCanvas");
+const calculateBtn = $("calculate");
+const playBtn = $("play");
+const backBtn = $("back");
+const forwardBtn = $("forward");
+const resetBtn = $("reset");
 
-const ledgerCanvas =
-    document.getElementById("ledgerCanvas");
+const speedInput = $("speed");
+const speedValue = $("speedValue");
 
-const choiceCtx =
-    choiceCanvas.getContext("2d");
+const resultEl = $("result");
+const lengthEl = $("length");
+const phaseEl = $("phase");
+const stepEl = $("step");
 
-const ledgerCtx =
-    ledgerCanvas.getContext("2d");
+const statusText = $("statusText");
+const statusDot = $("statusDot");
 
-let s1 = [];
-let s2 = [];
+const choiceView = $("choiceView");
+const choiceCanvas = $("choiceCanvas");
+const choiceCtx = choiceCanvas.getContext("2d");
 
-let dp = [];
+const ledgerView = $("ledgerView");
+const ledgerCanvas = $("ledgerCanvas");
+const ledgerCtx = ledgerCanvas.getContext("2d");
 
-let operations = [];
+const choicePanel = $("choicePanel");
+const ledgerPanel = $("ledgerPanel");
 
-let step = 0;
+const choiceEmpty = $("choiceEmpty");
+const ledgerEmpty = $("ledgerEmpty");
+
+const inspector = $("inspector");
+const inspectPos = $("inspectPos");
+const inspectChars = $("inspectChars");
+const inspectValue = $("inspectValue");
+const inspectDecision = $("inspectDecision");
+
+
+/* ============================================================
+   APPLICATION STATE
+============================================================ */
+
+let S1 = "";
+let S2 = "";
+
+let rows = 0;
+let cols = 0;
+
+let DP = [];
+
+let lcs = "";
+
+let steps = [];
+
+let stepIndex = 0;
+
+let phase = "READY";
+
+let playing = false;
 
 let timer = null;
 
-let isPlaying = false;
-
-let zoomLevel = 1;
-
-let calculated = false;
+let choiceTree = null;
 
 
-/* =========================================================
-   UPDATE COUNTERS
-========================================================= */
+/* ============================================================
+   VIEW STATE
+============================================================ */
 
-function updateCounts() {
+const choiceState = {
+    zoom:1,
+    x:0,
+    y:0,
+    fit:true,
+    dragging:false,
+    px:0,
+    py:0
+};
 
-    document.getElementById("count1")
-        .textContent =
-        s1El.value.length;
-
-    document.getElementById("count2")
-        .textContent =
-        s2El.value.length;
-}
-
-s1El.addEventListener(
-    "input",
-    updateCounts
-);
-
-s2El.addEventListener(
-    "input",
-    updateCounts
-);
+const ledgerState = {
+    zoom:1,
+    x:0,
+    y:0,
+    fit:true,
+    dragging:false,
+    px:0,
+    py:0
+};
 
 
-/* =========================================================
-   CANVAS RESIZE
-========================================================= */
+/* ============================================================
+   CANVAS HELPERS
+============================================================ */
 
-function resizeCanvas(canvas) {
+function resizeCanvas(canvas){
 
     const rect =
-        canvas.getBoundingClientRect();
+        canvas.parentElement.getBoundingClientRect();
 
-    const ratio =
+    const dpr =
         window.devicePixelRatio || 1;
 
     canvas.width =
-        rect.width * ratio;
+        Math.max(1,Math.floor(rect.width*dpr));
 
     canvas.height =
-        rect.height * ratio;
+        Math.max(1,Math.floor(rect.height*dpr));
+
+    canvas.style.width =
+        rect.width+"px";
+
+    canvas.style.height =
+        rect.height+"px";
 
     const ctx =
         canvas.getContext("2d");
 
     ctx.setTransform(
-        ratio,
-        0,
-        0,
-        ratio,
-        0,
-        0
+        dpr,0,0,dpr,0,0
     );
 }
 
 
-function resizeAll() {
+function resizeAll(){
 
-    resizeCanvas(
-        choiceCanvas
-    );
+    resizeCanvas(choiceCanvas);
+    resizeCanvas(ledgerCanvas);
 
-    resizeCanvas(
-        ledgerCanvas
-    );
-
-    draw();
+    drawChoice();
+    drawLedger();
 }
 
 window.addEventListener(
@@ -1543,1750 +1029,2323 @@ window.addEventListener(
 );
 
 
-/* =========================================================
-   CALCULATE
-========================================================= */
+/* ============================================================
+   STATUS
+============================================================ */
 
-function calculate() {
+function setStatus(text){
 
-    pause();
+    statusText.textContent = text;
 
-    s1 =
-        [...s1El.value.trim()];
+    if(text==="RUNNING"){
 
-    s2 =
-        [...s2El.value.trim()];
+        statusDot.style.background =
+            "var(--yellow)";
 
-    if (!s1.length || !s2.length) {
-
-        alert(
-            "Please enter both sequences."
-        );
-
-        return;
+        statusDot.style.boxShadow =
+            "0 0 10px rgba(210,153,34,.8)";
     }
 
-    dp =
-        Array.from(
-            {
-                length:
-                    s1.length + 1
-            },
-            () =>
-                Array(
-                    s2.length + 1
-                ).fill(0)
-        );
+    else if(text==="COMPLETE"){
 
-    operations = [];
+        statusDot.style.background =
+            "var(--green)";
 
-    step = 0;
+        statusDot.style.boxShadow =
+            "0 0 10px rgba(63,185,80,.8)";
+    }
 
-    calculated = true;
+    else if(text==="PAUSED"){
 
-    buildDP();
+        statusDot.style.background =
+            "var(--purple)";
 
-    updateUI();
+        statusDot.style.boxShadow =
+            "0 0 10px rgba(188,140,255,.8)";
+    }
 
-    draw();
+    else{
+
+        statusDot.style.background =
+            "var(--green)";
+
+        statusDot.style.boxShadow =
+            "0 0 10px rgba(63,185,80,.7)";
+    }
 }
 
 
-/* =========================================================
-   BUILD DP
-========================================================= */
+/* ============================================================
+   LCS ALGORITHM
+============================================================ */
 
-function buildDP() {
+function calculate(){
 
-    for (
-        let i = 1;
-        i <= s1.length;
-        i++
-    ) {
+    stop();
 
-        for (
-            let j = 1;
-            j <= s2.length;
-            j++
-        ) {
+    S1 =
+        s1Input.value.trim();
 
-            if (
-                s1[i - 1] ===
-                s2[j - 1]
-            ) {
+    S2 =
+        s2Input.value.trim();
 
-                dp[i][j] =
-                    dp[i - 1][j - 1] + 1;
+    rows =
+        S1.length + 1;
 
-                operations.push({
+    cols =
+        S2.length + 1;
 
-                    type:
-                        "match",
 
+    DP =
+        Array.from(
+            {length:rows},
+            () => Array(cols).fill(0)
+        );
+
+
+    steps = [];
+
+
+    /* ----------------------------------------
+       Base row / column
+    ---------------------------------------- */
+
+    for(let i=0;i<rows;i++){
+
+        DP[i][0] = 0;
+
+        if(i>0){
+
+            steps.push({
+                phase:"DP",
+                type:"base",
+                i,
+                j:0,
+                value:0
+            });
+        }
+    }
+
+
+    for(let j=1;j<cols;j++){
+
+        DP[0][j] = 0;
+
+        steps.push({
+            phase:"DP",
+            type:"base",
+            i:0,
+            j,
+            value:0
+        });
+    }
+
+
+    /* ----------------------------------------
+       Fill DP
+    ---------------------------------------- */
+
+    for(let i=1;i<rows;i++){
+
+        for(let j=1;j<cols;j++){
+
+            const a = S1[i-1];
+            const b = S2[j-1];
+
+            if(a===b){
+
+                DP[i][j] =
+                    DP[i-1][j-1] + 1;
+
+                steps.push({
+                    phase:"DP",
+                    type:"match",
                     i,
                     j,
-
-                    value:
-                        dp[i][j]
-
+                    a,
+                    b,
+                    value:DP[i][j]
                 });
 
-            } else {
+            }else{
 
                 const up =
-                    dp[i - 1][j];
+                    DP[i-1][j];
 
                 const left =
-                    dp[i][j - 1];
+                    DP[i][j-1];
 
-                dp[i][j] =
-                    Math.max(
-                        up,
-                        left
-                    );
+                DP[i][j] =
+                    Math.max(up,left);
 
-                operations.push({
-
-                    type:
-                        "choice",
-
+                steps.push({
+                    phase:"DP",
+                    type:"choice",
                     i,
                     j,
-
+                    a,
+                    b,
                     up,
                     left,
-
-                    value:
-                        dp[i][j]
-
+                    value:DP[i][j],
+                    direction:
+                        up>=left
+                            ? "up"
+                            : "left"
                 });
             }
         }
     }
 
 
-    /*
-        Backtracking
-    */
+    /* ----------------------------------------
+       Traceback
+    ---------------------------------------- */
 
-    let i =
-        s1.length;
+    let i = S1.length;
+    let j = S2.length;
 
-    let j =
-        s2.length;
+    const chars = [];
 
-    const path = [];
+    const trace = [];
 
 
-    while (
-        i > 0 &&
-        j > 0
-    ) {
+    while(i>0 && j>0){
 
-        if (
-            s1[i - 1] ===
-            s2[j - 1]
-        ) {
+        if(S1[i-1]===S2[j-1]){
 
-            path.push({
+            chars.unshift(S1[i-1]);
 
-                type:
-                    "path",
-
+            trace.push({
+                phase:"TRACE",
+                type:"trace-match",
                 i,
-                j,
-
-                char:
-                    s1[i - 1]
+                j
             });
 
             i--;
             j--;
 
-        } else {
+        }else if(DP[i-1][j]>=DP[i][j-1]){
 
-            if (
-                dp[i - 1][j] >=
-                dp[i][j - 1]
-            ) {
+            trace.push({
+                phase:"TRACE",
+                type:"trace-up",
+                i,
+                j
+            });
 
-                path.push({
+            i--;
 
-                    type:
-                        "up",
+        }else{
 
-                    i,
-                    j
+            trace.push({
+                phase:"TRACE",
+                type:"trace-left",
+                i,
+                j
+            });
 
-                });
+            j--;
+        }
+    }
 
-                i--;
 
-            } else {
+    trace.reverse();
 
-                path.push({
+    steps.push(...trace);
 
-                    type:
-                        "left",
+    lcs = chars.join("");
 
-                    i,
-                    j
 
-                });
+    /* ----------------------------------------
+       Choice tree
+    ---------------------------------------- */
 
-                j--;
+    choiceTree =
+        buildTree(
+            S1.length,
+            S2.length
+        );
+
+
+    stepIndex = 0;
+
+    phase = "DP";
+
+    resultEl.textContent = "—";
+    lengthEl.textContent = "—";
+    phaseEl.textContent = "DP";
+    updateStep();
+
+
+    choiceEmpty.style.display = "none";
+    ledgerEmpty.style.display = "none";
+
+
+    choiceState.x = 0;
+    choiceState.y = 0;
+    choiceState.fit = true;
+
+    ledgerState.x = 0;
+    ledgerState.y = 0;
+    ledgerState.fit = true;
+
+
+    setStatus("READY");
+
+    drawChoice();
+    drawLedger();
+
+
+    setTimeout(()=>{
+        fitChoice();
+        fitLedger();
+    },50);
+}
+
+
+/* ============================================================
+   CHOICE TREE
+============================================================ */
+
+let treeNodeId = 0;
+
+function buildTree(i,j,depth=0){
+
+    treeNodeId++;
+
+    const node = {
+        id:treeNodeId,
+        i,
+        j,
+        depth,
+        type:"state",
+        children:[],
+        x:0,
+        y:0,
+        leaves:1
+    };
+
+
+    if(i===0 || j===0){
+
+        node.type = "base";
+        return node;
+    }
+
+
+    if(S1[i-1]===S2[j-1]){
+
+        node.type = "match";
+
+        const child =
+            buildTree(
+                i-1,
+                j-1,
+                depth+1
+            );
+
+        child.edge = "↖";
+        child.edgeType = "match";
+
+        node.children.push(child);
+
+    }else{
+
+        node.type = "choice";
+
+        const up =
+            buildTree(
+                i-1,
+                j,
+                depth+1
+            );
+
+        up.edge = "↑";
+        up.edgeType = "up";
+
+        const left =
+            buildTree(
+                i,
+                j-1,
+                depth+1
+            );
+
+        left.edge = "←";
+        left.edgeType = "left";
+
+        node.children.push(up,left);
+    }
+
+    return node;
+}
+
+
+/* ============================================================
+   TREE LAYOUT
+============================================================ */
+
+function layoutTree(root){
+
+    let leaf = 0;
+
+    const NODE_W = 74;
+    const NODE_H = 44;
+    const H_GAP = 24;
+    const V_GAP = 78;
+
+
+    function walk(node){
+
+        if(node.children.length===0){
+
+            node.x =
+                leaf *
+                (NODE_W+H_GAP);
+
+            leaf++;
+
+        }else{
+
+            node.children.forEach(walk);
+
+            node.x =
+                (
+                    node.children[0].x +
+                    node.children[
+                        node.children.length-1
+                    ].x
+                )/2;
+        }
+
+        node.y =
+            node.depth * V_GAP;
+    }
+
+
+    walk(root);
+
+
+    return {
+        width:
+            Math.max(
+                NODE_W,
+                leaf*(NODE_W+H_GAP)
+            ),
+        height:
+            (getMaxDepth(root)+1)*V_GAP,
+        nodeW:NODE_W,
+        nodeH:NODE_H
+    };
+}
+
+
+function getMaxDepth(node){
+
+    let d = node.depth;
+
+    for(const child of node.children){
+
+        d =
+            Math.max(
+                d,
+                getMaxDepth(child)
+            );
+    }
+
+    return d;
+}
+
+
+function flattenTree(root){
+
+    const arr = [];
+
+    function walk(node){
+
+        arr.push(node);
+
+        node.children.forEach(walk);
+    }
+
+    walk(root);
+
+    return arr;
+}
+
+
+/* ============================================================
+   CHOICE DRAW
+============================================================ */
+
+function drawChoice(){
+
+    const ctx = choiceCtx;
+
+    const W =
+        choiceView.clientWidth ||
+        choiceView.getBoundingClientRect().width;
+
+    const H =
+        choiceView.clientHeight ||
+        choiceView.getBoundingClientRect().height;
+
+
+    ctx.clearRect(0,0,W,H);
+
+
+    if(!choiceTree) return;
+
+
+    const layout =
+        layoutTree(choiceTree);
+
+    const nodes =
+        flattenTree(choiceTree);
+
+
+    let scale =
+        choiceState.zoom;
+
+
+    if(choiceState.fit){
+
+        scale =
+            Math.min(
+                (W-40)/layout.width,
+                (H-50)/layout.height,
+                2.2
+            );
+
+        scale =
+            Math.max(.2,scale);
+
+        choiceState.zoom = scale;
+        choiceState.fit = false;
+
+        updateChoiceZoom();
+    }
+
+
+    const treeW =
+        layout.width*scale;
+
+    const treeH =
+        layout.height*scale;
+
+
+    const ox =
+        (W-treeW)/2+
+        choiceState.x;
+
+    const oy =
+        (H-treeH)/2+
+        choiceState.y;
+
+
+    function sx(node){
+
+        return ox+
+            node.x*scale+
+            layout.nodeW*scale/2;
+    }
+
+    function sy(node){
+
+        return oy+
+            node.y*scale+
+            layout.nodeH*scale/2;
+    }
+
+
+    /* ----------------------------------------
+       Active DP cell
+    ---------------------------------------- */
+
+    let active = null;
+
+    if(stepIndex>0){
+
+        active =
+            steps[
+                stepIndex-1
+            ];
+    }
+
+
+    /* ----------------------------------------
+       Edges
+    ---------------------------------------- */
+
+    for(const node of nodes){
+
+        const x1 = sx(node);
+        const y1 = sy(node);
+
+        for(const child of node.children){
+
+            const x2 = sx(child);
+            const y2 = sy(child);
+
+
+            let color =
+                child.edgeType==="match"
+                    ? "#3fb950"
+                    : child.edgeType==="up"
+                        ? "#d29922"
+                        : "#58a6ff";
+
+
+            if(
+                active &&
+                active.i===node.i &&
+                active.j===node.j
+            ){
+                color="#bc8cff";
+            }
+
+
+            ctx.save();
+
+            ctx.strokeStyle=color;
+            ctx.lineWidth=
+                Math.max(1,1.5*scale);
+
+            ctx.beginPath();
+
+            ctx.moveTo(
+                x1,
+                y1+
+                layout.nodeH*scale/2
+            );
+
+            const mid =
+                (y1+y2)/2;
+
+            ctx.bezierCurveTo(
+                x1,mid,
+                x2,mid,
+                x2,
+                y2-
+                layout.nodeH*scale/2
+            );
+
+            ctx.stroke();
+
+
+            drawArrow(
+                ctx,
+                x2,
+                y2-layout.nodeH*scale/2,
+                color,
+                scale
+            );
+
+
+            /* Edge label */
+
+            const lx =
+                (x1+x2)/2;
+
+            const ly =
+                (y1+y2)/2;
+
+
+            ctx.font =
+                `bold ${Math.max(
+                    9,10*scale
+                )}px monospace`;
+
+            const tw =
+                ctx.measureText(
+                    child.edge
+                ).width;
+
+
+            ctx.fillStyle =
+                "rgba(5,8,13,.94)";
+
+            ctx.beginPath();
+
+            ctx.roundRect(
+                lx-tw/2-5,
+                ly-9,
+                tw+10,
+                18,
+                5
+            );
+
+            ctx.fill();
+
+
+            ctx.fillStyle=color;
+            ctx.textAlign="center";
+            ctx.textBaseline="middle";
+
+            ctx.fillText(
+                child.edge,
+                lx,
+                ly
+            );
+
+
+            ctx.restore();
+        }
+    }
+
+
+    /* ----------------------------------------
+       Nodes
+    ---------------------------------------- */
+
+    for(const node of nodes){
+
+        const x = sx(node);
+        const y = sy(node);
+
+        const activeNode =
+            active &&
+            active.i===node.i &&
+            active.j===node.j;
+
+
+        let fill="#0b1119";
+        let stroke="#344154";
+        let text="#b9c6d6";
+
+
+        if(node.type==="match"){
+
+            fill="rgba(63,185,80,.12)";
+            stroke="#3fb950";
+            text="#7ee787";
+
+        }else if(node.type==="choice"){
+
+            fill="rgba(210,153,34,.11)";
+            stroke="#8a681f";
+            text="#e3b341";
+
+        }else{
+
+            fill="rgba(88,166,255,.09)";
+            stroke="#315d8d";
+            text="#79b8ff";
+        }
+
+
+        if(activeNode){
+
+            fill="rgba(188,140,255,.27)";
+            stroke="#bc8cff";
+            text="#ffffff";
+        }
+
+
+        const w =
+            layout.nodeW*scale;
+
+        const h =
+            layout.nodeH*scale;
+
+
+        rounded(
+            ctx,
+            x-w/2,
+            y-h/2,
+            w,
+            h,
+            7,
+            fill,
+            stroke
+        );
+
+
+        textDraw(
+            ctx,
+            `(${node.i},${node.j})`,
+            x,
+            y-5*scale,
+            text,
+            Math.max(7,10*scale)
+        );
+
+
+        if(node.i>0 && node.j>0){
+
+            textDraw(
+                ctx,
+                `${S1[node.i-1]} : ${S2[node.j-1]}`,
+                x,
+                y+9*scale,
+                "#68778a",
+                Math.max(6,7.5*scale)
+            );
+        }
+
+
+        let decision="BASE";
+        let decisionColor="#64748b";
+
+
+        if(node.type==="match"){
+
+            decision="MATCH ↖";
+            decisionColor="#3fb950";
+
+        }else if(node.type==="choice"){
+
+            decision="MAX ↑ / ←";
+            decisionColor="#d29922";
+        }
+
+
+        textDraw(
+            ctx,
+            decision,
+            x,
+            y+h/2+11*scale,
+            decisionColor,
+            Math.max(6,7*scale)
+        );
+    }
+
+
+    textDraw(
+        ctx,
+        `STATE (${S1.length},${S2.length})`,
+        10,
+        13,
+        "#58677a",
+        9,
+        "left"
+    );
+
+
+    textDraw(
+        ctx,
+        `${nodes.length} recursive states`,
+        W-10,
+        13,
+        "#58677a",
+        9,
+        "right"
+    );
+}
+
+
+/* ============================================================
+   LEDGER DRAW
+============================================================ */
+
+function drawLedger(){
+
+    const ctx = ledgerCtx;
+
+    const W =
+        ledgerView.clientWidth ||
+        ledgerView.getBoundingClientRect().width;
+
+    const H =
+        ledgerView.clientHeight ||
+        ledgerView.getBoundingClientRect().height;
+
+
+    ctx.clearRect(0,0,W,H);
+
+
+    if(!DP.length) return;
+
+
+    const cellW=58;
+    const cellH=44;
+    const headerW=50;
+    const headerH=44;
+
+
+    const totalW =
+        headerW+
+        cols*cellW;
+
+    const totalH =
+        headerH+
+        rows*cellH;
+
+
+    let scale =
+        ledgerState.zoom;
+
+
+    if(ledgerState.fit){
+
+        scale =
+            Math.min(
+                (W-30)/totalW,
+                (H-30)/totalH,
+                2.4
+            );
+
+        scale =
+            Math.max(.45,scale);
+
+        ledgerState.zoom=scale;
+        ledgerState.fit=false;
+
+        updateLedgerZoom();
+    }
+
+
+    const ox =
+        (W-totalW*scale)/2+
+        ledgerState.x;
+
+    const oy =
+        (H-totalH*scale)/2+
+        ledgerState.y;
+
+
+    /* ----------------------------------------
+       Header row
+    ---------------------------------------- */
+
+    for(let j=0;j<cols;j++){
+
+        const x =
+            ox+
+            (headerW+j*cellW)*scale;
+
+        const y=oy;
+
+
+        ledgerCell(
+            ctx,
+            x,y,
+            cellW*scale,
+            headerH*scale,
+            j===0 ? "Ø" : S2[j-1],
+            "#79b8ff",
+            "#0d1723",
+            "#31506d"
+        );
+    }
+
+
+    /* ----------------------------------------
+       Header column
+    ---------------------------------------- */
+
+    for(let i=0;i<rows;i++){
+
+        const x=ox;
+
+        const y =
+            oy+
+            (headerH+i*cellH)*scale;
+
+
+        ledgerCell(
+            ctx,
+            x,y,
+            headerW*scale,
+            cellH*scale,
+            i===0 ? "Ø" : S1[i-1],
+            "#7ee787",
+            "#0d1723",
+            "#315c3b"
+        );
+    }
+
+
+    /* ----------------------------------------
+       Cells
+    ---------------------------------------- */
+
+    for(let i=0;i<rows;i++){
+
+        for(let j=0;j<cols;j++){
+
+            const x =
+                ox+
+                (headerW+j*cellW)*scale;
+
+            const y =
+                oy+
+                (headerH+i*cellH)*scale;
+
+
+            let visible=false;
+
+
+            if(i===0 || j===0){
+
+                visible=true;
+
+            }else{
+
+                const idx =
+                    findStep(i,j);
+
+                visible =
+                    idx>=0 &&
+                    idx<stepIndex;
+            }
+
+
+            let value =
+                visible
+                    ? DP[i][j]
+                    : "";
+
+
+            let fill="#0b1119";
+            let border="#1d2a3a";
+            let color="#65748a";
+
+
+            if(visible){
+
+                fill="#0d1722";
+                color="#b9c6d6";
+            }
+
+
+            const active =
+                stepIndex>0 &&
+                steps[stepIndex-1] &&
+                steps[stepIndex-1].i===i &&
+                steps[stepIndex-1].j===j;
+
+
+            if(active){
+
+                fill="rgba(188,140,255,.24)";
+                border="#bc8cff";
+                color="#ffffff";
+            }
+
+
+            if(
+                visible &&
+                i>0 &&
+                j>0 &&
+                S1[i-1]===S2[j-1]
+            ){
+
+                fill="rgba(63,185,80,.10)";
+                border="#275b31";
+                color="#7ee787";
+            }
+
+
+            ledgerCell(
+                ctx,
+                x,y,
+                cellW*scale,
+                cellH*scale,
+                value,
+                color,
+                fill,
+                border
+            );
+
+
+            if(
+                visible &&
+                i>0 &&
+                j>0
+            ){
+
+                let arrow="";
+
+                let arrowColor="#68778a";
+
+
+                if(
+                    S1[i-1]===S2[j-1]
+                ){
+
+                    arrow="↖";
+                    arrowColor="#3fb950";
+
+                }else if(
+                    DP[i-1][j]>=DP[i][j-1]
+                ){
+
+                    arrow="↑";
+                    arrowColor="#d29922";
+
+                }else{
+
+                    arrow="←";
+                    arrowColor="#58a6ff";
+                }
+
+
+                textDraw(
+                    ctx,
+                    arrow,
+                    x+
+                    cellW*scale-
+                    9*scale,
+                    y+
+                    10*scale,
+                    arrowColor,
+                    Math.max(7,10*scale)
+                );
             }
         }
     }
 
 
+    /* ----------------------------------------
+       Traceback path
+    ---------------------------------------- */
+
+    if(
+        phase==="TRACE" ||
+        stepIndex>=steps.length
+    ){
+
+        drawTracePath(
+            ctx,
+            ox,
+            oy,
+            scale,
+            cellW,
+            cellH,
+            headerW,
+            headerH
+        );
+    }
+}
+
+
+/* ============================================================
+   TRACEBACK PATH
+============================================================ */
+
+function drawTracePath(
+    ctx,
+    ox,
+    oy,
+    scale,
+    cellW,
+    cellH,
+    headerW,
+    headerH
+){
+
+    let i=S1.length;
+    let j=S2.length;
+
+    const path=[];
+
+
+    while(i>0 && j>0){
+
+        path.push({i,j});
+
+        if(S1[i-1]===S2[j-1]){
+
+            i--;
+            j--;
+
+        }else if(DP[i-1][j]>=DP[i][j-1]){
+
+            i--;
+
+        }else{
+
+            j--;
+        }
+    }
+
+
+    path.push({i:0,j:0});
+
+
+    ctx.save();
+
+    ctx.strokeStyle="#bc8cff";
+    ctx.lineWidth=Math.max(2,2.5*scale);
+    ctx.globalAlpha=.82;
+
+    ctx.beginPath();
+
+
     path.reverse();
 
-    operations.push(...path);
+
+    path.forEach((p,index)=>{
+
+        const x =
+            ox+
+            (headerW+
+            p.j*cellW+
+            cellW/2)*scale;
+
+        const y =
+            oy+
+            (headerH+
+            p.i*cellH+
+            cellH/2)*scale;
 
 
-    operations.push({
+        if(index===0){
 
-        type:
-            "done"
+            ctx.moveTo(x,y);
 
+        }else{
+
+            ctx.lineTo(x,y);
+        }
     });
+
+
+    ctx.stroke();
+
+
+    ctx.restore();
+
+
+    /* Highlight matched traceback cells */
+
+    for(const p of path){
+
+        if(
+            p.i>0 &&
+            p.j>0 &&
+            S1[p.i-1]===S2[p.j-1]
+        ){
+
+            const x =
+                ox+
+                (headerW+p.j*cellW)*scale;
+
+            const y =
+                oy+
+                (headerH+p.i*cellH)*scale;
+
+
+            ctx.save();
+
+            ctx.strokeStyle="#bc8cff";
+            ctx.lineWidth=Math.max(2,2*scale);
+
+            ctx.strokeRect(
+                x+2*scale,
+                y+2*scale,
+                cellW*scale-4*scale,
+                cellH*scale-4*scale
+            );
+
+            ctx.restore();
+        }
+    }
 }
 
 
-/* =========================================================
-   GET LCS
-========================================================= */
+/* ============================================================
+   FIND DP STEP
+============================================================ */
 
-function getLCS() {
+function findStep(i,j){
 
-    let i =
-        s1.length;
+    for(let k=0;k<steps.length;k++){
 
-    let j =
-        s2.length;
+        const s=steps[k];
 
-    let result = "";
-
-
-    while (
-        i > 0 &&
-        j > 0
-    ) {
-
-        if (
-            s1[i - 1] ===
-            s2[j - 1]
-        ) {
-
-            result =
-                s1[i - 1] +
-                result;
-
-            i--;
-            j--;
-
-        } else if (
-            dp[i - 1][j] >=
-            dp[i][j - 1]
-        ) {
-
-            i--;
-
-        } else {
-
-            j--;
+        if(
+            s.phase==="DP" &&
+            s.i===i &&
+            s.j===j
+        ){
+            return k;
         }
     }
 
-
-    return result;
+    return -1;
 }
 
 
-/* =========================================================
-   EXAMPLE
-========================================================= */
-
-function example() {
-
-    s1El.value =
-        "ABCBDAB";
-
-    s2El.value =
-        "BDCABA";
-
-    updateCounts();
-
-    calculate();
-}
-
-
-/* =========================================================
-   OPERATION STATE
-========================================================= */
-
-function visibleCells() {
-
-    const cells = [];
-
-    for (
-        let k = 0;
-        k < step;
-        k++
-    ) {
-
-        const op =
-            operations[k];
-
-        if (
-            op.type ===
-                "match" ||
-            op.type ===
-                "choice"
-        ) {
-
-            cells.push([
-                op.i,
-                op.j
-            ]);
-        }
-    }
-
-    return cells;
-}
-
-
-function pathCells() {
-
-    const cells = [];
-
-    for (
-        let k = 0;
-        k < step;
-        k++
-    ) {
-
-        const op =
-            operations[k];
-
-        if (
-            op.type ===
-            "path"
-        ) {
-
-            cells.push([
-                op.i,
-                op.j
-            ]);
-        }
-    }
-
-    return cells;
-}
-
-
-/* =========================================================
-   FORWARD
-========================================================= */
-
-function forward() {
-
-    if (!calculated) {
-
-        calculate();
-
-        return;
-    }
-
-    if (
-        step >=
-        operations.length
-    ) {
-
-        return;
-    }
-
-    step++;
-
-    updateUI();
-
-    draw();
-}
-
-
-/* =========================================================
-   BACK
-========================================================= */
-
-function back() {
-
-    pause();
-
-    if (step <= 0)
-        return;
-
-    step--;
-
-    updateUI();
-
-    draw();
-}
-
-
-/* =========================================================
-   COMPLETE
-========================================================= */
-
-function complete() {
-
-    if (!calculated)
-        calculate();
-
-    step =
-        operations.length;
-
-    updateUI();
-
-    draw();
-}
-
-
-/* =========================================================
-   PLAY
-========================================================= */
-
-function play() {
-
-    if (!calculated)
-        calculate();
-
-    if (
-        step >=
-        operations.length
-    ) {
-
-        step = 0;
-    }
-
-    if (isPlaying)
-        return;
-
-    isPlaying = true;
-
-    document.getElementById(
-        "state"
-    ).textContent =
-        "Playing";
-
-    document.getElementById(
-        "headerStatus"
-    ).textContent =
-        "PLAYING";
-
-    animate();
-}
-
-
-/* =========================================================
-   ANIMATE
-========================================================= */
-
-function animate() {
-
-    if (!isPlaying)
-        return;
-
-    if (
-        step >=
-        operations.length
-    ) {
-
-        isPlaying = false;
-
-        document.getElementById(
-            "state"
-        ).textContent =
-            "Complete";
-
-        document.getElementById(
-            "headerStatus"
-        ).textContent =
-            "COMPLETE";
-
-        return;
-    }
-
-    forward();
-
-    const speed =
-        Number(
-            document.getElementById(
-                "speed"
-            ).value
-        );
-
-    const delay =
-        950 -
-        speed * 82;
-
-    timer =
-        setTimeout(
-            animate,
-            delay
-        );
-}
-
-
-/* =========================================================
-   PAUSE
-========================================================= */
-
-function pause() {
-
-    isPlaying = false;
-
-    clearTimeout(timer);
-
-    if (
-        calculated &&
-        step >=
-        operations.length
-    ) {
-
-        document.getElementById(
-            "state"
-        ).textContent =
-            "Complete";
-
-    } else {
-
-        document.getElementById(
-            "state"
-        ).textContent =
-            "Paused";
-    }
-
-    document.getElementById(
-        "headerStatus"
-    ).textContent =
-        "PAUSED";
-}
-
-
-/* =========================================================
-   RESET
-========================================================= */
-
-function reset() {
-
-    pause();
-
-    step = 0;
-
-    document.getElementById(
-        "result"
-    ).textContent =
-        "—";
-
-    document.getElementById(
-        "length"
-    ).textContent =
-        "0";
-
-    updateUI();
-
-    draw();
-}
-
-
-/* =========================================================
-   UPDATE UI
-========================================================= */
-
-function updateUI() {
-
-    const total =
-        operations.length;
-
-    const percent =
-        total
-        ? Math.round(
-            (step / total) * 100
-        )
-        : 0;
-
-
-    document.getElementById(
-        "counter"
-    ).textContent =
-        `${step} / ${total}`;
-
-
-    document.getElementById(
-        "percent"
-    ).textContent =
-        `${percent}%`;
-
-
-    document.getElementById(
-        "progress"
-    ).style.width =
-        `${percent}%`;
-
-
-    if (
-        calculated &&
-        step >=
-        total
-    ) {
-
-        const lcs =
-            getLCS();
-
-        document.getElementById(
-            "result"
-        ).textContent =
-            lcs || "∅";
-
-        document.getElementById(
-            "length"
-        ).textContent =
-            lcs.length;
-
-        document.getElementById(
-            "state"
-        ).textContent =
-            "Complete";
-
-        document.getElementById(
-            "headerStatus"
-        ).textContent =
-            "COMPLETE";
-    }
-}
-
-
-/* =========================================================
-   SPEED
-========================================================= */
-
-document
-    .getElementById("speed")
-    .addEventListener(
-        "input",
-        e => {
-
-            document.getElementById(
-                "speedValue"
-            ).textContent =
-                `${e.target.value}×`;
-        }
+/* ============================================================
+   DRAWING UTILITIES
+============================================================ */
+
+function rounded(
+    ctx,
+    x,y,w,h,r,
+    fill,
+    stroke
+){
+
+    ctx.save();
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        x,y,w,h,r
     );
 
+    ctx.fillStyle=fill;
+    ctx.fill();
 
-/* =========================================================
-   ZOOM
-========================================================= */
+    ctx.strokeStyle=stroke;
+    ctx.lineWidth=1;
+    ctx.stroke();
 
-function zoom(amount) {
-
-    if (amount === 0) {
-
-        zoomLevel = 1;
-
-    } else {
-
-        zoomLevel += amount;
-
-        zoomLevel =
-            Math.max(
-                .6,
-                Math.min(
-                    1.8,
-                    zoomLevel
-                )
-            );
-    }
-
-    draw();
+    ctx.restore();
 }
 
 
-/* =========================================================
-   DRAW
-========================================================= */
+function textDraw(
+    ctx,
+    text,
+    x,y,
+    color,
+    size,
+    align="center"
+){
 
-function draw() {
+    ctx.save();
 
+    ctx.fillStyle=color;
+
+    ctx.font=
+        `600 ${size}px monospace`;
+
+    ctx.textAlign=align;
+    ctx.textBaseline="middle";
+
+    ctx.fillText(
+        text,
+        x,y
+    );
+
+    ctx.restore();
+}
+
+
+function ledgerCell(
+    ctx,
+    x,y,w,h,
+    text,
+    color,
+    fill,
+    border
+){
+
+    ctx.save();
+
+    ctx.fillStyle=fill;
+    ctx.fillRect(x,y,w,h);
+
+    ctx.strokeStyle=border;
+    ctx.lineWidth=1;
+    ctx.strokeRect(x,y,w,h);
+
+
+    textDraw(
+        ctx,
+        String(text),
+        x+w/2,
+        y+h/2,
+        color,
+        Math.max(
+            8,
+            Math.min(15,w*.25)
+        )
+    );
+
+    ctx.restore();
+}
+
+
+function drawArrow(
+    ctx,
+    x,y,
+    color,
+    scale
+){
+
+    const s=Math.max(4,5*scale);
+
+    ctx.save();
+
+    ctx.fillStyle=color;
+
+    ctx.beginPath();
+
+    ctx.moveTo(x,y);
+
+    ctx.lineTo(x-s,y-s);
+
+    ctx.lineTo(x+s,y-s);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    ctx.restore();
+}
+
+
+/* ============================================================
+   ZOOM
+============================================================ */
+
+function updateChoiceZoom(){
+
+    $("choiceZoom").textContent =
+        Math.round(
+            choiceState.zoom*100
+        )+"%";
+}
+
+
+function updateLedgerZoom(){
+
+    $("ledgerZoom").textContent =
+        Math.round(
+            ledgerState.zoom*100
+        )+"%";
+}
+
+
+function zoomChoice(mult){
+
+    choiceState.fit=false;
+
+    choiceState.zoom =
+        clamp(
+            choiceState.zoom*mult,
+            .2,
+            4
+        );
+
+    updateChoiceZoom();
+    drawChoice();
+}
+
+
+function zoomLedger(mult){
+
+    ledgerState.fit=false;
+
+    ledgerState.zoom =
+        clamp(
+            ledgerState.zoom*mult,
+            .35,
+            4
+        );
+
+    updateLedgerZoom();
     drawLedger();
+}
+
+
+function clamp(v,min,max){
+
+    return Math.max(
+        min,
+        Math.min(max,v)
+    );
+}
+
+
+function fitChoice(){
+
+    choiceState.x=0;
+    choiceState.y=0;
+    choiceState.fit=true;
 
     drawChoice();
 }
 
 
-/* =========================================================
-   LEDGER
-========================================================= */
+function fitLedger(){
 
-function drawLedger() {
+    ledgerState.x=0;
+    ledgerState.y=0;
+    ledgerState.fit=true;
 
-    const ctx =
-        ledgerCtx;
+    drawLedger();
+}
 
-    const W =
-        ledgerCanvas.clientWidth;
 
-    const H =
-        ledgerCanvas.clientHeight;
+/* ============================================================
+   MOUSE ZOOM AROUND CURSOR
+============================================================ */
 
-    ctx.clearRect(
-        0,
-        0,
-        W,
-        H
+function wheelZoom(
+    event,
+    viewport,
+    state,
+    draw,
+    min=.2
+){
+
+    event.preventDefault();
+
+    const rect =
+        viewport.getBoundingClientRect();
+
+
+    const mx =
+        event.clientX-
+        rect.left;
+
+    const my =
+        event.clientY-
+        rect.top;
+
+
+    const oldZoom =
+        state.zoom;
+
+
+    const factor =
+        event.deltaY<0
+            ? 1.12
+            : .89;
+
+
+    const newZoom =
+        clamp(
+            oldZoom*factor,
+            min,
+            4
+        );
+
+
+    if(newZoom===oldZoom)
+        return;
+
+
+    /*
+       Keep the point under the mouse
+       fixed while zooming.
+    */
+
+    const cx =
+        (mx-
+        viewport.clientWidth/2-
+        state.x)/
+        oldZoom;
+
+
+    const cy =
+        (my-
+        viewport.clientHeight/2-
+        state.y)/
+        oldZoom;
+
+
+    state.zoom=newZoom;
+
+
+    state.x =
+        mx-
+        viewport.clientWidth/2-
+        cx*newZoom;
+
+    state.y =
+        my-
+        viewport.clientHeight/2-
+        cy*newZoom;
+
+
+    state.fit=false;
+
+    draw();
+
+    if(state===choiceState)
+        updateChoiceZoom();
+    else
+        updateLedgerZoom();
+}
+
+
+/* ============================================================
+   PAN
+============================================================ */
+
+function setupPan(
+    viewport,
+    state,
+    draw
+){
+
+    viewport.addEventListener(
+        "pointerdown",
+        e=>{
+
+            if(e.button!==0)
+                return;
+
+            state.dragging=true;
+
+            state.px=e.clientX;
+            state.py=e.clientY;
+
+            viewport.classList.add(
+                "dragging"
+            );
+
+            viewport.setPointerCapture(
+                e.pointerId
+            );
+        }
     );
 
 
-    if (!calculated) {
+    viewport.addEventListener(
+        "pointermove",
+        e=>{
 
-        centerText(
-            ctx,
-            W,
-            H,
-            "Enter sequences and press Calculate"
-        );
+            if(!state.dragging)
+                return;
 
-        return;
-    }
 
+            state.x +=
+                e.clientX-state.px;
 
-    const rows =
-        s1.length + 1;
+            state.y +=
+                e.clientY-state.py;
 
-    const cols =
-        s2.length + 1;
 
+            state.px=e.clientX;
+            state.py=e.clientY;
 
-    /*
-        Automatically fit cells.
-    */
 
-    const padding =
-        20;
+            state.fit=false;
 
-    const availableW =
-        W - padding * 2;
-
-    const availableH =
-        H - padding * 2;
-
-
-    let cw =
-        availableW / cols;
-
-    let ch =
-        availableH / rows;
-
-
-    /*
-        Zoom
-    */
-
-    cw *= zoomLevel;
-    ch *= zoomLevel;
-
-
-    /*
-        Maximum cell size.
-    */
-
-    cw =
-        Math.min(
-            cw,
-            45
-        );
-
-    ch =
-        Math.min(
-            ch,
-            38
-        );
-
-
-    /*
-        Minimum usable size.
-    */
-
-    cw =
-        Math.max(
-            cw,
-            19
-        );
-
-    ch =
-        Math.max(
-            ch,
-            20
-        );
-
-
-    const tableW =
-        cw * cols;
-
-    const tableH =
-        ch * rows;
-
-
-    const startX =
-        (W - tableW) / 2;
-
-    const startY =
-        (H - tableH) / 2;
-
-
-    const cells =
-        visibleCells();
-
-    const path =
-        pathCells();
-
-
-    /*
-        Sequence headers
-    */
-
-    ctx.textAlign =
-        "center";
-
-    ctx.textBaseline =
-        "middle";
-
-    ctx.font =
-        "bold 11px monospace";
-
-
-    for (
-        let j = 0;
-        j < s2.length;
-        j++
-    ) {
-
-        text(
-            ctx,
-            s2[j],
-            startX +
-                (j + 1) *
-                cw +
-                cw / 2,
-            startY -
-                8,
-            "#7d8ca1",
-            11
-        );
-    }
-
-
-    for (
-        let i = 0;
-        i < s1.length;
-        i++
-    ) {
-
-        text(
-            ctx,
-            s1[i],
-            startX -
-                10,
-            startY +
-                (i + 1) *
-                ch +
-                ch / 2,
-            "#7d8ca1",
-            11
-        );
-    }
-
-
-    /*
-        Cells
-    */
-
-    for (
-        let i = 0;
-        i < rows;
-        i++
-    ) {
-
-        for (
-            let j = 0;
-            j < cols;
-            j++
-        ) {
-
-            const x =
-                startX +
-                j * cw;
-
-            const y =
-                startY +
-                i * ch;
-
-
-            const visible =
-                cells.some(
-                    c =>
-                        c[0] === i &&
-                        c[1] === j
-                );
-
-
-            const onPath =
-                path.some(
-                    c =>
-                        c[0] === i &&
-                        c[1] === j
-                );
-
-
-            const last =
-                step > 0
-                ? operations[
-                    step - 1
-                  ]
-                : null;
-
-
-            const current =
-                last &&
-                (
-                    last.i === i &&
-                    last.j === j
-                );
-
-
-            let fill =
-                "#0a1017";
-
-            let border =
-                "#243142";
-
-            let valueColor =
-                "#66758a";
-
-
-            if (visible) {
-
-                fill =
-                    "rgba(88,166,255,.08)";
-
-                border =
-                    "#294966";
-
-                valueColor =
-                    "#a9c7e8";
-            }
-
-
-            if (
-                visible &&
-                i > 0 &&
-                j > 0 &&
-                s1[i - 1] ===
-                s2[j - 1]
-            ) {
-
-                fill =
-                    "rgba(63,185,80,.12)";
-
-                border =
-                    "#32783a";
-
-                valueColor =
-                    "#7ee787";
-            }
-
-
-            if (onPath) {
-
-                fill =
-                    "rgba(57,208,216,.16)";
-
-                border =
-                    "#39d0d8";
-
-                valueColor =
-                    "#67e8ef";
-            }
-
-
-            if (current) {
-
-                fill =
-                    "rgba(188,140,255,.22)";
-
-                border =
-                    "#bc8cff";
-
-                valueColor =
-                    "#ffffff";
-            }
-
-
-            roundedRect(
-                ctx,
-                x + 1,
-                y + 1,
-                cw - 2,
-                ch - 2,
-                4,
-                fill,
-                border
-            );
-
-
-            /*
-                Values
-            */
-
-            if (
-                i === 0 ||
-                j === 0
-            ) {
-
-                text(
-                    ctx,
-                    "0",
-                    x +
-                        cw / 2,
-                    y +
-                        ch / 2,
-                    "#536174",
-                    Math.max(
-                        8,
-                        Math.min(
-                            11,
-                            cw / 3
-                        )
-                    )
-                );
-
-            } else if (visible || onPath) {
-
-                text(
-                    ctx,
-                    dp[i][j],
-                    x +
-                        cw / 2,
-                    y +
-                        ch / 2,
-                    valueColor,
-                    Math.max(
-                        8,
-                        Math.min(
-                            12,
-                            cw / 3
-                        )
-                    )
-                );
-            }
+            draw();
         }
+    );
+
+
+    function stopDrag(e){
+
+        state.dragging=false;
+
+        viewport.classList.remove(
+            "dragging"
+        );
+
+        try{
+            viewport.releasePointerCapture(
+                e.pointerId
+            );
+        }catch(_){}
+    }
+
+
+    viewport.addEventListener(
+        "pointerup",
+        stopDrag
+    );
+
+    viewport.addEventListener(
+        "pointercancel",
+        stopDrag
+    );
+
+
+    viewport.addEventListener(
+        "wheel",
+        e=>wheelZoom(
+            e,
+            viewport,
+            state,
+            draw,
+            state===choiceState?.2:.35
+        ),
+        {passive:false}
+    );
+}
+
+
+setupPan(
+    choiceView,
+    choiceState,
+    drawChoice
+);
+
+
+setupPan(
+    ledgerView,
+    ledgerState,
+    drawLedger
+);
+
+
+/* ============================================================
+   FULLSCREEN
+============================================================ */
+
+function toggleFullscreen(panel){
+
+    panel.classList.toggle(
+        "fullscreen"
+    );
+
+    setTimeout(
+        ()=>{
+            resizeAll();
+
+            if(
+                panel===choicePanel
+            ){
+                fitChoice();
+            }else{
+                fitLedger();
+            }
+        },
+        50
+    );
+}
+
+
+$("choiceFull").addEventListener(
+    "click",
+    ()=>toggleFullscreen(choicePanel)
+);
+
+$("ledgerFull").addEventListener(
+    "click",
+    ()=>toggleFullscreen(ledgerPanel)
+);
+
+
+/* ============================================================
+   ZOOM BUTTONS
+============================================================ */
+
+$("choiceMinus").onclick =
+    ()=>zoomChoice(.8);
+
+$("choicePlus").onclick =
+    ()=>zoomChoice(1.25);
+
+$("choiceFit").onclick =
+    fitChoice;
+
+
+$("ledgerMinus").onclick =
+    ()=>zoomLedger(.8);
+
+$("ledgerPlus").onclick =
+    ()=>zoomLedger(1.25);
+
+$("ledgerFit").onclick =
+    fitLedger;
+
+
+/* ============================================================
+   ANIMATION
+============================================================ */
+
+function delay(){
+
+    const speed =
+        Number(speedInput.value);
+
+    return Math.max(
+        55,
+        700-speed*62
+    );
+}
+
+
+speedInput.addEventListener(
+    "input",
+    ()=>{
+        speedValue.textContent =
+            speedInput.value+"x";
+    }
+);
+
+
+function play(){
+
+    if(!steps.length)
+        return;
+
+
+    if(stepIndex>=steps.length){
+
+        stepIndex=0;
+        phase="DP";
+    }
+
+
+    playing=true;
+
+    playBtn.textContent="⏸ Pause";
+
+    setStatus("RUNNING");
+
+
+    timer =
+        setInterval(
+            ()=>{
+
+                if(
+                    stepIndex>=steps.length
+                ){
+
+                    finish();
+
+                    return;
+                }
+
+
+                stepIndex++;
+
+                updateStep();
+
+                drawChoice();
+                drawLedger();
+
+            },
+            delay()
+        );
+}
+
+
+function stop(){
+
+    playing=false;
+
+    if(timer){
+
+        clearInterval(timer);
+        timer=null;
+    }
+
+    playBtn.textContent="▶ Play";
+}
+
+
+function finish(){
+
+    stop();
+
+    stepIndex=steps.length;
+
+    phase="TRACE";
+
+    resultEl.textContent =
+        lcs || "∅";
+
+    lengthEl.textContent =
+        lcs.length;
+
+    phaseEl.textContent =
+        "COMPLETE";
+
+    updateStep();
+
+    drawChoice();
+    drawLedger();
+
+    setStatus("COMPLETE");
+}
+
+
+playBtn.onclick=()=>{
+
+    if(playing){
+
+        stop();
+
+        setStatus("PAUSED");
+
+    }else{
+
+        play();
+    }
+};
+
+
+/* ============================================================
+   STEP
+============================================================ */
+
+function nextStep(){
+
+    stop();
+
+    if(
+        stepIndex<
+        steps.length
+    ){
+
+        stepIndex++;
+
+        const current =
+            steps[
+                stepIndex-1
+            ];
+
+        phase =
+            current.phase;
+
+
+        if(
+            stepIndex===
+            steps.length
+        ){
+
+            finish();
+
+            return;
+        }
+
+
+        updateStep();
+
+        drawChoice();
+        drawLedger();
+
+        setStatus("PAUSED");
+    }
+}
+
+
+function previousStep(){
+
+    stop();
+
+    if(stepIndex>0){
+
+        stepIndex--;
+
+        const current =
+            steps[
+                Math.max(
+                    0,
+                    stepIndex-1
+                )
+            ];
+
+
+        phase =
+            current
+                ? current.phase
+                : "DP";
+
+
+        resultEl.textContent="—";
+        lengthEl.textContent="—";
+
+
+        updateStep();
+
+        drawChoice();
+        drawLedger();
+
+        setStatus("PAUSED");
+    }
+}
+
+
+forwardBtn.onclick =
+    nextStep;
+
+backBtn.onclick =
+    previousStep;
+
+
+/* ============================================================
+   STEP INFO
+============================================================ */
+
+function updateStep(){
+
+    stepEl.textContent =
+        `${stepIndex} / ${steps.length}`;
+
+    phaseEl.textContent =
+        stepIndex>=steps.length
+            ? "COMPLETE"
+            : phase;
+
+
+    if(steps.length){
+
+        const progress =
+            stepIndex/
+            steps.length;
+
+        document.documentElement
+            .style
+            .setProperty(
+                "--progress",
+                progress
+            );
     }
 
 
     /*
-        Backtracking path arrows.
+       During traceback show
+       progressively built LCS.
     */
 
-    if (
-        path.length > 1
-    ) {
+    if(
+        stepIndex>0 &&
+        steps[
+            stepIndex-1
+        ]?.phase==="TRACE"
+    ){
 
-        ctx.save();
+        const chars=[];
 
-        ctx.strokeStyle =
-            "#39d0d8";
-
-        ctx.lineWidth =
-            1.5;
-
-        ctx.globalAlpha =
-            .8;
-
-
-        for (
-            let k = 1;
-            k < path.length;
+        for(
+            let k=0;
+            k<stepIndex;
             k++
-        ) {
+        ){
 
-            const a =
-                path[k - 1];
+            const st=steps[k];
 
-            const b =
-                path[k];
+            if(
+                st.phase==="TRACE" &&
+                st.type==="trace-match"
+            ){
 
-
-            const ax =
-                startX +
-                a[1] * cw +
-                cw / 2;
-
-            const ay =
-                startY +
-                a[0] * ch +
-                ch / 2;
-
-
-            const bx =
-                startX +
-                b[1] * cw +
-                cw / 2;
-
-            const by =
-                startY +
-                b[0] * ch +
-                ch / 2;
-
-
-            ctx.beginPath();
-
-            ctx.moveTo(
-                ax,
-                ay
-            );
-
-            ctx.lineTo(
-                bx,
-                by
-            );
-
-            ctx.stroke();
-        }
-
-        ctx.restore();
-    }
-
-
-    /*
-        Current operation explanation.
-    */
-
-    const last =
-        step > 0
-        ? operations[
-            step - 1
-          ]
-        : null;
-
-
-    if (last) {
-
-        let message = "";
-
-
-        if (
-            last.type ===
-            "match"
-        ) {
-
-            message =
-                `${s1[last.i - 1]} = ${s2[last.j - 1]}  →  +1`;
-
-        } else if (
-            last.type ===
-            "choice"
-        ) {
-
-            message =
-                `max(${last.up}, ${last.left}) = ${last.value}`;
-
-        } else if (
-            last.type ===
-            "path"
-        ) {
-
-            message =
-                `Match "${last.char}" → move ↖`;
-
-        } else if (
-            last.type ===
-            "up"
-        ) {
-
-            message =
-                "Move ↑";
-
-        } else if (
-            last.type ===
-            "left"
-        ) {
-
-            message =
-                "Move ←";
+                chars.push(
+                    S1[st.i-1]
+                );
+            }
         }
 
 
-        if (message) {
-
-            text(
-                ctx,
-                message,
-                10,
-                H - 8,
-                "#596a80",
-                8,
-                "left"
-            );
-        }
+        resultEl.textContent =
+            chars.join("") ||
+            "—";
     }
 }
 
 
-/* =========================================================
-   CHOICE TREE
-========================================================= */
+/* ============================================================
+   RESET
+============================================================ */
 
-function drawChoice() {
+resetBtn.onclick=()=>{
 
-    const ctx =
-        choiceCtx;
+    stop();
 
-    const W =
-        choiceCanvas.clientWidth;
+    stepIndex=0;
 
-    const H =
-        choiceCanvas.clientHeight;
+    phase="DP";
 
-    ctx.clearRect(
-        0,
-        0,
-        W,
-        H
-    );
+    resultEl.textContent="—";
+    lengthEl.textContent="—";
+
+    choiceState.x=0;
+    choiceState.y=0;
+    choiceState.fit=true;
+
+    ledgerState.x=0;
+    ledgerState.y=0;
+    ledgerState.fit=true;
+
+    updateStep();
+
+    drawChoice();
+    drawLedger();
+
+    setStatus("READY");
+};
 
 
-    if (!calculated) {
+/* ============================================================
+   CALCULATE BUTTON
+============================================================ */
 
-        centerText(
-            ctx,
-            W,
-            H,
-            "Choice diagram"
-        );
+calculateBtn.onclick=calculate;
 
-        return;
+
+s1Input.addEventListener(
+    "keydown",
+    e=>{
+        if(e.key==="Enter")
+            calculate();
     }
+);
 
 
-    /*
-        Build a compact decision tree.
-    */
-
-    const maxNodes =
-        Math.min(
-            55,
-            14 +
-            s1.length *
-            2
-        );
-
-
-    const nodes = [];
-
-    let id = 0;
-
-
-    function build(
-        i,
-        j,
-        depth
-    ) {
-
-        if (
-            id >=
-            maxNodes
-        ) {
-
-            return null;
-        }
-
-
-        const node = {
-
-            id: id++,
-
-            i,
-            j,
-
-            depth,
-
-            children: []
-
-        };
-
-
-        nodes.push(node);
-
-
-        if (
-            i === 0 ||
-            j === 0
-        ) {
-
-            return node;
-        }
-
-
-        if (
-            s1[i - 1] ===
-            s2[j - 1]
-        ) {
-
-            const child =
-                build(
-                    i - 1,
-                    j - 1,
-                    depth + 1
-                );
-
-            if (child)
-                node.children.push(
-                    child
-                );
-
-        } else {
-
-            const up =
-                build(
-                    i - 1,
-                    j,
-                    depth + 1
-                );
-
-            const left =
-                build(
-                    i,
-                    j - 1,
-                    depth + 1
-                );
-
-            if (up)
-                node.children.push(
-                    up
-                );
-
-            if (left)
-                node.children.push(
-                    left
-                );
-        }
-
-
-        return node;
+s2Input.addEventListener(
+    "keydown",
+    e=>{
+        if(e.key==="Enter")
+            calculate();
     }
+);
 
 
-    const root =
-        build(
-            s1.length,
-            s2.length,
-            0
+/* ============================================================
+   LEDGER CELL INSPECTOR
+============================================================ */
+
+ledgerView.addEventListener(
+    "click",
+    event=>{
+
+        if(
+            ledgerState.dragging
+        )
+            return;
+
+
+        if(!DP.length)
+            return;
+
+
+        const rect =
+            ledgerView.getBoundingClientRect();
+
+
+        const mx =
+            event.clientX-
+            rect.left;
+
+        const my =
+            event.clientY-
+            rect.top;
+
+
+        const cellW=58;
+        const cellH=44;
+        const headerW=50;
+        const headerH=44;
+
+
+        const scale =
+            ledgerState.zoom;
+
+
+        const totalW =
+            headerW+
+            cols*cellW;
+
+        const totalH =
+            headerH+
+            rows*cellH;
+
+
+        const ox =
+            (ledgerView.clientWidth-
+            totalW*scale)/2+
+            ledgerState.x;
+
+        const oy =
+            (ledgerView.clientHeight-
+            totalH*scale)/2+
+            ledgerState.y;
+
+
+        const j =
+            Math.floor(
+                (
+                    mx-ox-
+                    headerW*scale
+                )/
+                (cellW*scale)
+            );
+
+
+        const i =
+            Math.floor(
+                (
+                    my-oy-
+                    headerH*scale
+                )/
+                (cellH*scale)
+            );
+
+
+        if(
+            i<0 ||
+            j<0 ||
+            i>=rows ||
+            j>=cols
+        )
+            return;
+
+
+        inspectPos.textContent =
+            `(${i}, ${j})`;
+
+        inspectChars.textContent =
+            i>0 && j>0
+                ? `${S1[i-1]} / ${S2[j-1]}`
+                : "Base";
+
+        inspectValue.textContent =
+            DP[i][j];
+
+
+        let decision="Base case";
+
+
+        if(i>0 && j>0){
+
+            if(
+                S1[i-1]===
+                S2[j-1]
+            ){
+
+                decision =
+                    `MATCH → DP[${i-1}][${j-1}] + 1`;
+
+            }else{
+
+                decision =
+                    DP[i-1][j]>=
+                    DP[i][j-1]
+                        ? `UP → DP[${i-1}][${j}]`
+                        : `LEFT → DP[${i}][${j-1}]`;
+            }
+        }
+
+
+        inspectDecision.textContent =
+            decision;
+
+
+        inspector.classList.add(
+            "show"
         );
 
 
-    /*
-        Group by levels.
-    */
-
-    const levels = {};
-
-
-    nodes.forEach(
-        node => {
-
-            if (
-                !levels[node.depth]
-            ) {
-
-                levels[node.depth] =
-                    [];
-            }
-
-            levels[
-                node.depth
-            ].push(node);
-        }
-    );
-
-
-    const maxDepth =
-        Math.max(
-            ...nodes.map(
-                n => n.depth
-            )
+        setTimeout(
+            ()=>{
+                inspector.classList.remove(
+                    "show"
+                );
+            },
+            3500
         );
+    }
+);
 
 
-    const depthHeight =
-        Math.max(
-            35,
-            Math.min(
-                54,
-                (H - 30) /
-                (maxDepth + 1)
-            )
+/* ============================================================
+   KEYBOARD SHORTCUTS
+============================================================ */
+
+document.addEventListener(
+    "keydown",
+    e=>{
+
+        /*
+           Don't hijack typing.
+        */
+
+        if(
+            e.target.tagName==="INPUT"
+        )
+            return;
+
+
+        if(e.code==="Space"){
+
+            e.preventDefault();
+
+            if(playing){
+
+                stop();
+                setStatus("PAUSED");
+
+            }else{
+
+                play();
+            }
+        }
+
+
+        else if(e.key==="ArrowRight"){
+
+            nextStep();
+        }
+
+
+        else if(e.key==="ArrowLeft"){
+
+            previousStep();
+        }
+
+
+        else if(
+            e.key==="+" ||
+            e.key==="="
+        ){
+
+            zoomChoice(1.15);
+            zoomLedger(1.15);
+        }
+
+
+        else if(e.key==="-"){
+
+            zoomChoice(.87);
+            zoomLedger(.87);
+        }
+
+
+        else if(
+            e.key.toLowerCase()==="f"
+        ){
+
+            fitChoice();
+            fitLedger();
+        }
+
+
+        else if(e.key==="Escape"){
+
+            choicePanel.classList.remove(
+                "fullscreen"
+            );
+
+            ledgerPanel.classList.remove(
+                "fullscreen"
+            );
+
+            resizeAll();
+
+            fitChoice();
+            fitLedger();
+        }
+    }
+);
+
+
+/* ============================================================
+   INITIAL LOAD
+============================================================ */
+
+window.addEventListener(
+    "load",
+    ()=>{
+
+        resizeAll();
+
+        calculate();
+
+        setTimeout(
+            ()=>{
+                resizeAll();
+                fitChoice();
+                fitLedger();
+            },
+            100
         );
-
-
-    const positions =
-        new Map();
-
-
-    Object.keys(
-        levels
-    ).forEach(
-        depth => {
-
-            const list =
-                levels[depth];
-
-
-            list.forEach(
-                (node,index) => {
-
-                    const x =
-                        (
-                            (index + 1) /
-                            (list.length + 1)
-                        ) * W;
-
-                    const y =
-                        20 +
-                        Number(depth) *
-                        depthHeight;
-
-
-                    positions.set(
-                        node.id,
-                        {
-                            x,
-                            y
-                        }
-                    );
-                }
-            );
-        }
-    );
-
-
-    /*
-        Edges.
-    */
-
-    ctx.save();
-
-    ctx.lineWidth =
-        1;
-
-    nodes.forEach(
-        node => {
-
-            const p =
-                positions.get(
-                    node.id
-                );
-
-
-            node.children.forEach(
-                child => {
-
-                    const c =
-                        positions.get(
-                            child.id
-                        );
-
-
-                    if (!c)
-                        return;
-
-
-                    const visited =
-                        node.depth <
-                        Math.ceil(
-                            step /
-                            Math.max(
-                                1,
-                                s2.length
-                            )
-                        );
-
-
-                    ctx.strokeStyle =
-                        visited
-                        ? "#355d8c"
-                        : "#263244";
-
-
-                    ctx.beginPath();
-
-                    ctx.moveTo(
-                        p.x,
-                        p.y + 10
-                    );
-
-                    ctx.lineTo(
-                        c.x,
-                        c.y - 10
-                    );
-
-                    ctx.stroke();
-                }
-            );
-        }
-    );
-
-    ctx.restore();
-
-
-    /*
-        Nodes.
-    */
-
-    nodes.forEach(
-        node => {
-
-            const p =
-                positions.get(
-                    node.id
-                );
-
-
-            const visited =
-                node.depth <
-                Math.ceil(
-                    step /
-                    Math.max(
-                        1,
-                        s2.length
-                    )
-                );
-
-
-            let fill =
-                "#0b1118";
-
-            let border =
-                "#2b394a";
-
-            let color =
-                "#9ba9ba";
-
-
-            if (visited) {
-
-                fill =
-                    "rgba(88,166,255,.10)";
-
-                border =
-                    "#355d8c";
-
-                color =
-                    "#b9d8fb";
-            }
-
-
-            if (
-                node.i > 0 &&
-                node.j > 0 &&
-                s1[node.i - 1] ===
-                s2[node.j - 1]
-            ) {
-
-                border =
-                    "#32783a";
-
-                fill =
-                    "rgba(63,185,80,.10)";
-
-                color =
-                    "#7ee787";
-            }
-
-
-            if (
-                node === root
-            ) {
-
-                fill =
-                    "rgba(188,140,255,.16)";
-
-                border =
-                    "#bc8cff";
-
-                color =
-                    "#dfc5ff";
-            }
-
-
-            roundedRect(
-                ctx,
-                p.x - 15,
-                p.y - 10,
-                30,
-                20,
-                5,
-                fill,
-                border
-            );
-
-
-            let label =
-                "0";
-
-
-            if (
-                node.i > 0 &&
-                node.j > 0
-            ) {
-
-                label =
-                    s1[node.i - 1] +
-                    s2[node.j - 1];
-            }
-
-
-            text(
-                ctx,
-                label,
-                p.x,
-                p.y,
-                color,
-                8
-            );
-        }
-    );
-
-
-    /*
-        Footer.
-    */
-
-    text(
-        ctx,
-        `${nodes.length} decision nodes`,
-        9,
-        H - 8,
-        "#4d5c70",
-        8,
-        "left"
-    );
-}
-
-
-/* =========================================================
-   DRAW HELPERS
-========================================================= */
-
-function roundedRect(
-    ctx,
-    x,
-    y,
-    w,
-    h,
-    radius,
-    fill,
-    stroke
-) {
-
-    ctx.beginPath();
-
-    ctx.roundRect(
-        x,
-        y,
-        w,
-        h,
-        radius
-    );
-
-    ctx.fillStyle =
-        fill;
-
-    ctx.fill();
-
-    ctx.strokeStyle =
-        stroke;
-
-    ctx.lineWidth =
-        1;
-
-    ctx.stroke();
-}
-
-
-function text(
-    ctx,
-    value,
-    x,
-    y,
-    color,
-    size,
-    align = "center"
-) {
-
-    ctx.save();
-
-    ctx.fillStyle =
-        color;
-
-    ctx.font =
-        `600 ${size}px monospace`;
-
-    ctx.textAlign =
-        align;
-
-    ctx.textBaseline =
-        "middle";
-
-    ctx.fillText(
-        String(value),
-        x,
-        y
-    );
-
-    ctx.restore();
-}
-
-
-function centerText(
-    ctx,
-    W,
-    H,
-    value
-) {
-
-    text(
-        ctx,
-        value,
-        W / 2,
-        H / 2,
-        "#526175",
-        10
-    );
-}
-
-
-/* =========================================================
-   INIT
-========================================================= */
-
-updateCounts();
-
-calculate();
-
-setTimeout(
-    resizeAll,
-    100
+    }
 );
 
 </script>
